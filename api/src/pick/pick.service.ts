@@ -10,4 +10,8 @@ export class PickService {
   createPick(createPickDto: CreatePickDto): Promise<Pick> {
     return this.pickRepository.createPick(createPickDto);
   }
+
+  getOnePick(id: string): Promise<Pick> {
+    return this.pickRepository.getOnePick(id);
+  }
 }
