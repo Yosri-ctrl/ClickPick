@@ -7,18 +7,21 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class Post {
+export class Pick {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
-  contente: string;
+  // @Column()
+  // user: User;
 
   @Column()
+  content: string;
+
+  @Column({ default: 0 })
   like: number;
 
-  //   @Column()
-  //   comment: string[];
+  @Column({ nullable: true })
+  comment: string;
 
   @CreateDateColumn({
     type: 'timestamp',
@@ -32,7 +35,4 @@ export class Post {
     onUpdate: 'CURRENT_TIMESTAMP(6)',
   })
   updated_at: Date;
-
-  @Column()
-  user: string;
 }
