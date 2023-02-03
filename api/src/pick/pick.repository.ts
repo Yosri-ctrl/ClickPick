@@ -30,4 +30,33 @@ export class PickReposiroty {
     }
     return pick;
   }
+
+  async getAllPick(): Promise<Pick[]> {
+    const query = this.pickEntityRepository.createQueryBuilder('pick');
+    const tasks = await query.getMany();
+    return tasks;
+  }
+
+  async updatePickContent(
+    id: string,
+    contentPickDto: CreatePickDto,
+  ): Promise<Pick> {
+    const { content } = contentPickDto;
+    const pick = await this.getOnePick(id);
+
+    pick.content = content;
+    await this.pickEntityRepository.save(pick);
+
+    return pick;
+  }
+
+  async deletPick(id: string): Promise<void> {
+    const pick = await this.getOnePick(id);
+    const res = await this.pickEntityRepository.remove(pick);
+
+    // if (res.affected == 0) {
+    //   this.logger.error(`Pick with id: ${id} Not found`);
+    //   throw new NotFoundException();
+    // }
+  }
 }

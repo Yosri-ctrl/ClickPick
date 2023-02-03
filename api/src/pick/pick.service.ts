@@ -14,4 +14,16 @@ export class PickService {
   getOnePick(id: string): Promise<Pick> {
     return this.pickRepository.getOnePick(id);
   }
+
+  getAllPicks(): Promise<Pick[]> {
+    return this.pickRepository.getAllPick();
+  }
+
+  updatePickContent(id: string, contentPickDto: CreatePickDto): Promise<Pick> {
+    return this.pickRepository.updatePickContent(id, contentPickDto);
+  }
+
+  deletPick(id: string): Promise<void> {
+    return this.pickRepository.deletPick(id);
+  }
 }
