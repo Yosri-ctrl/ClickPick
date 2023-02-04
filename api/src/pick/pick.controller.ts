@@ -48,6 +48,7 @@ export class PickController {
 
   @Delete('/:id')
   deletePick(@Param('id') id: string): Promise<void> {
+    this.logger.verbose(`Deleting Pick with id: ${id}`);
     return this.pickSevice.deletPick(id);
   }
 }
