@@ -24,4 +24,15 @@ export class AuthService {
   getAllUser(): Promise<User[]> {
     return this.authRepository.getAllUsers();
   }
+
+  updateUserUsername(id: string, username: string): Promise<User> {
+    return this.authRepository.updateUserUsername(id, username);
+  }
+
+  updateUserPass(
+    id: string,
+    updateUserPassDto: UpdateUserPassDto,
+  ): Promise<User> {
+    return this.authRepository.updaetUserPass(id, updateUserPassDto);
+  }
 }

@@ -48,4 +48,24 @@ export class AuthController {
     this.logger.verbose(`Getting data for all users`);
     return this.authService.getAllUser();
   }
+
+  @Patch('/:id/username')
+  @UseGuards(AuthGuard())
+  updateUserUsername(
+    @Param('id') id: string,
+    @Body('username') username: string,
+  ): Promise<User> {
+    this.logger.verbose(`Updating username for user: ${id}`);
+    return this.authService.updateUserUsername(id, username);
+  }
+
+  @Patch('/:id/password')
+  @UseGuards(AuthGuard())
+  updateUserPass(
+    @Param('id') id: string,
+    @Body() updateUserPassDto: UpdateUserPassDto,
+  ): Promise<User> {
+    this.logger.verbose(`Updating password for user: ${id}`);
+    return this.authService.updateUserPass(id, updateUserPassDto);
+  }
 }
