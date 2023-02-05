@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { Pick } from 'src/pick/pick.entity';
 import {
   Column,
@@ -20,9 +21,11 @@ export class User {
   email: string;
 
   @Column()
+  @Exclude({ toPlainOnly: true })
   password: string;
 
   @OneToMany((_type) => Pick, (pick) => pick.user, { eager: true })
+  @Exclude({ toPlainOnly: true })
   pick: Pick[];
 
   // @Column({ nullable: true })

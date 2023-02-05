@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { User } from 'src/auth/user.entity';
 import {
   Column,
@@ -26,6 +27,7 @@ export class Pick {
   comment: string;
 
   @ManyToOne((_type) => User, (user) => user.pick, { eager: false })
+  @Exclude({ toPlainOnly: true })
   user: User;
 
   @CreateDateColumn({
