@@ -43,7 +43,7 @@ export class AuthRepository {
         throw new ConflictException('User name already exists');
       }
       this.logger.error(`Error Signing up the user: ${email}`);
-      throw new InternalServerErrorException();
+      throw new InternalServerErrorException(`${err}`);
     }
   }
 
