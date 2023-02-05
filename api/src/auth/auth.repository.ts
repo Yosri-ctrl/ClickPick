@@ -111,4 +111,13 @@ export class AuthRepository {
 
     return user;
   }
+
+  async deleteUser(id: string): Promise<void> {
+    const res = await this.authRepository.delete({ id });
+
+    if (res.affected == 0) {
+      this.logger.error(`Failed delete user: "${id}"`);
+      throw new NotFoundException(`User with ${id} not found`);
+    }
+  }
 }

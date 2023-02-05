@@ -68,4 +68,11 @@ export class AuthController {
     this.logger.verbose(`Updating password for user: ${id}`);
     return this.authService.updateUserPass(id, updateUserPassDto);
   }
+
+  @Delete('/:id')
+  @UseGuards(AuthGuard())
+  deleteUser(@Param('id') id: string): Promise<void> {
+    this.logger.verbose(`Deleting user: ${id}`);
+    return this.authService.deleteUser(id);
+  }
 }

@@ -35,4 +35,8 @@ export class AuthService {
   ): Promise<User> {
     return this.authRepository.updaetUserPass(id, updateUserPassDto);
   }
+
+  deleteUser(id: string): Promise<void> {
+    return this.authRepository.deleteUser(id);
+  }
 }
