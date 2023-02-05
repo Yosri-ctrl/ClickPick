@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { AuthRepository } from './auth.repository';
 import { SignInAuthDto } from './dto/sign-in-auth.dto';
 import { SignUpAuthDto } from './dto/sign-up-auth.dto';
+import { UpdateUserPassDto } from './dto/update-user-pass.dto';
 import { User } from './user.entity';
 
 @Injectable()
@@ -18,5 +19,9 @@ export class AuthService {
 
   getOneUser(id: string): Promise<User> {
     return this.authRepository.getOneUser(id);
+  }
+
+  getAllUser(): Promise<User[]> {
+    return this.authRepository.getAllUsers();
   }
 }

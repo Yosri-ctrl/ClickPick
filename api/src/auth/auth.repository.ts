@@ -3,6 +3,7 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -13,6 +14,7 @@ import * as bcrypt from 'bcrypt';
 import { SignInAuthDto } from './dto/sign-in-auth.dto';
 import { JwtService } from '@nestjs/jwt';
 import { AuthJwtInterface } from './interface/auth.interface';
+import { UpdateUserPassDto } from './dto/update-user-pass.dto';
 
 @Injectable()
 export class AuthRepository {
@@ -69,5 +71,17 @@ export class AuthRepository {
       throw new UnauthorizedException();
     }
     return user;
+  }
+
+  async getAllUsers(): Promise<User[]> {
+    const query = this.authRepository.createQueryBuilder('user');
+    const users = await query.getMany();
+
+    if (!users) {
+      this.logger.error(`Couldn't find users`);
+      throw new UnauthorizedException();
+    }
+
+    return users;
   }
 }
