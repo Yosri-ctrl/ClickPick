@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { User } from 'src/auth/user.entity';
 import { CreatePickDto } from './dto/create-pick.dto';
 import { Pick } from './pick.entity';
 import { PickReposiroty } from './pick.repository';
@@ -7,8 +8,8 @@ import { PickReposiroty } from './pick.repository';
 export class PickService {
   constructor(private pickRepository: PickReposiroty) {}
 
-  createPick(createPickDto: CreatePickDto): Promise<Pick> {
-    return this.pickRepository.createPick(createPickDto);
+  createPick(createPickDto: CreatePickDto, user: User): Promise<Pick> {
+    return this.pickRepository.createPick(createPickDto, user);
   }
 
   getOnePick(id: string): Promise<Pick> {

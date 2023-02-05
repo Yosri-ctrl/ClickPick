@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   Injectable,
   InternalServerErrorException,
   Logger,
@@ -38,7 +39,10 @@ export class AuthRepository {
       await this.authRepository.save(user);
       return user;
     } catch (err) {
-      this.logger.error(`Error Signing up the user: ${username}`);
+      if (err.code == 23505) {
+        throw new ConflictException('User name already exists');
+      }
+      this.logger.error(`Error Signing up the user: ${email}`);
       throw new InternalServerErrorException();
     }
   }
@@ -56,5 +60,14 @@ export class AuthRepository {
       this.logger.error(`User with email: ${email} not found`);
       throw new UnauthorizedException();
     }
+  }
+
+  async getOneUser(id: string): Promise<User> {
+    const user: User = await this.authRepository.findOneBy({ id });
+    if (!user) {
+      this.logger.error(`User: ${id} not found`);
+      throw new UnauthorizedException();
+    }
+    return user;
   }
 }

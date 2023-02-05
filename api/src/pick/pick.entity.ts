@@ -1,7 +1,9 @@
+import { User } from 'src/auth/user.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -22,6 +24,9 @@ export class Pick {
 
   @Column({ nullable: true })
   comment: string;
+
+  @ManyToOne((_type) => User, (user) => user.pick, { eager: false })
+  user: User;
 
   @CreateDateColumn({
     type: 'timestamp',

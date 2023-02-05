@@ -1,5 +1,6 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/auth/user.entity';
 import { Repository } from 'typeorm';
 import { CreatePickDto } from './dto/create-pick.dto';
 import { Pick } from './pick.entity';
@@ -12,10 +13,11 @@ export class PickReposiroty {
   ) {}
   private logger = new Logger('Pick repository');
 
-  async createPick(createPickDto: CreatePickDto): Promise<Pick> {
+  async createPick(createPickDto: CreatePickDto, user: User): Promise<Pick> {
     const { content } = createPickDto;
     const pick: Pick = this.pickEntityRepository.create({
       content: content,
+      user,
     });
 
     await this.pickEntityRepository.save(pick);

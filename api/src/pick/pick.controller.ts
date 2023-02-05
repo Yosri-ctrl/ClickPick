@@ -7,20 +7,28 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { GetUser } from 'src/auth/get-user.decorator';
+import { User } from 'src/auth/user.entity';
 import { CreatePickDto } from './dto/create-pick.dto';
 import { Pick } from './pick.entity';
 import { PickService } from './pick.service';
 
 @Controller('pick')
+@UseGuards(AuthGuard())
 export class PickController {
   constructor(private pickSevice: PickService) {}
   private logger = new Logger('Pick controller');
 
   @Post()
-  createPick(@Body() createPick: CreatePickDto): Promise<Pick> {
+  createPick(
+    @Body() createPick: CreatePickDto,
+    @GetUser() user: User,
+  ): Promise<Pick> {
     this.logger.verbose(`Creating a Pick with content: ${createPick.content}`);
-    return this.pickSevice.createPick(createPick);
+    return this.pickSevice.createPick(createPick, user);
   }
 
   @Get('/:id')

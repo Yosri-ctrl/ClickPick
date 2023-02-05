@@ -1,4 +1,13 @@
-import { Body, Controller, Logger, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Logger,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { SignInAuthDto } from './dto/sign-in-auth.dto';
 import { SignUpAuthDto } from './dto/sign-up-auth.dto';
@@ -21,5 +30,11 @@ export class AuthController {
   ): Promise<{ accessToken: string }> {
     this.logger.verbose(`Signing in a user with email: ${signInAuthDto.email}`);
     return this.authService.signin(signInAuthDto);
+  }
+
+  @Get('/:id')
+  @UseGuards(AuthGuard())
+  getOneUser(@Param('id') id: string): Promise<User> {
+    return this.authService.getOneUser(id);
   }
 }

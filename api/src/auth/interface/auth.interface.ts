@@ -1,3 +1,3 @@
-export class AuthJwtInterface {
+export interface AuthJwtInterface {
   email: string;
 }

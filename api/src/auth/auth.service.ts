@@ -15,4 +15,8 @@ export class AuthService {
   signin(singInAuthDto: SignInAuthDto): Promise<{ accessToken: string }> {
     return this.authRepository.signin(singInAuthDto);
   }
+
+  getOneUser(id: string): Promise<User> {
+    return this.authRepository.getOneUser(id);
+  }
 }

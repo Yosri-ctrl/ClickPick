@@ -1,7 +1,9 @@
+import { Pick } from 'src/pick/pick.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -19,6 +21,9 @@ export class User {
 
   @Column()
   password: string;
+
+  @OneToMany((_type) => Pick, (pick) => pick.user, { eager: true })
+  pick: Pick[];
 
   // @Column({ nullable: true })
   // friends: User[];
