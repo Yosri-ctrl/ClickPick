@@ -26,7 +26,7 @@ export class Pick {
   @Column({ nullable: true })
   comment: string;
 
-  @ManyToOne((_type) => User, (user) => user.pick, { eager: false })
+  @ManyToOne(() => User, (user) => user.pick, { eager: false })
   @Exclude({ toPlainOnly: true })
   user: User;
 

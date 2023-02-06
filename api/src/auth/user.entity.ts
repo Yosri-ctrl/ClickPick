@@ -4,6 +4,8 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -24,12 +26,16 @@ export class User {
   @Exclude({ toPlainOnly: true })
   password: string;
 
-  @OneToMany((_type) => Pick, (pick) => pick.user, { eager: true })
+  @OneToMany(() => Pick, (pick) => pick.user, { eager: true })
   @Exclude({ toPlainOnly: true })
   pick: Pick[];
 
-  // @Column({ nullable: true })
-  // friends: User[];
+  @ManyToMany(() => User, (user) => user.following)
+  @JoinTable()
+  followers: User[];
+
+  @ManyToMany(() => User, (user) => user.followers)
+  following: User[];
 
   // @Column({ nullable: true })
   // groups: Group[];
