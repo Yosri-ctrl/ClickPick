@@ -8,10 +8,11 @@ import {
   ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
+  RelationCount,
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity()
+@Entity({ name: 'user' })
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -30,11 +31,21 @@ export class User {
   @Exclude({ toPlainOnly: true })
   pick: Pick[];
 
+  // @Column({ type: 'text', array: true, default: [] })
+  // @Exclude({ toPlainOnly: true })
+  // followers: string[];
+
+  // @Column({ type: 'text', array: true, default: [] })
+  // @Exclude({ toPlainOnly: true })
+  // following: string[];
+
   @ManyToMany(() => User, (user) => user.following)
-  @JoinTable()
+  @Exclude({ toPlainOnly: true })
   followers: User[];
 
   @ManyToMany(() => User, (user) => user.followers)
+  @Exclude({ toPlainOnly: true })
+  @JoinTable()
   following: User[];
 
   // @Column({ nullable: true })
@@ -45,7 +56,6 @@ export class User {
 
   // @Column()
   // birth_date: Date;
-
   @CreateDateColumn({
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP(6)',
