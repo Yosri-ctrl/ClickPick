@@ -145,7 +145,7 @@ export class AuthRepository {
     });
 
     if (user1[0].following.find((u) => u.id == id2)) {
-      this.logger.error(`User: ${id1} already following ${id2}`);
+      this.logger.error(`User: ${id1} already following ${id2}`, '');
       throw new ConflictException(`User: ${id1} already following ${id2}`);
     }
     user1[0].following.push(user2);
@@ -153,22 +153,31 @@ export class AuthRepository {
     await this.authRepository.save(user1);
   }
 
-  // Fixing this
   async unfollowUser(followUserDto: FollowUserDto): Promise<void> {
     const { id1, id2 } = followUserDto;
-    const user1 = await this.getOneUser(id1);
+    if (id1 == id2) {
+      this.logger.error(`User can't be the same`);
+      throw new ConflictException(`User can't be the same`);
+    }
+
     const user2 = await this.getOneUser(id2);
+    const user1 = await this.authRepository.find({
+      relations: {
+        following: true,
+      },
+      where: {
+        id: id1,
+      },
+    });
 
-    // if (!user1.following.includes(id2)) {
-    //   this.logger.error(`User: "${id1}" is not following user: "${id2}"`);
-    //   throw new ConflictException(`User: ${id1} is not following user: ${id2}`);
-    // }
+    if (!user1[0].following.find((u) => u.id == id2)) {
+      this.logger.error(`User: ${id1} is not following ${id2}`, '');
+      throw new ConflictException(`User: ${id1} is not following ${id2}`);
+    }
 
-    // user1.following.splice(user1.following.indexOf(user2.id), 1);
-    // user2.followers.splice(user2.followers.indexOf(user1.id), 1);
+    user1[0].following.splice(user1[0].following.indexOf(user2), 1);
 
     await this.authRepository.save(user1);
-    await this.authRepository.save(user2);
   }
   //Implementing get all followers for a user
   //Implementing get all following for a user

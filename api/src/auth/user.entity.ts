@@ -8,7 +8,6 @@ import {
   ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
-  RelationCount,
   UpdateDateColumn,
 } from 'typeorm';
 
@@ -31,20 +30,11 @@ export class User {
   @Exclude({ toPlainOnly: true })
   pick: Pick[];
 
-  // @Column({ type: 'text', array: true, default: [] })
-  // @Exclude({ toPlainOnly: true })
-  // followers: string[];
-
-  // @Column({ type: 'text', array: true, default: [] })
-  // @Exclude({ toPlainOnly: true })
-  // following: string[];
-
   @ManyToMany(() => User, (user) => user.following)
   @Exclude({ toPlainOnly: true })
   followers: User[];
 
   @ManyToMany(() => User, (user) => user.followers)
-  @Exclude({ toPlainOnly: true })
   @JoinTable()
   following: User[];
 
