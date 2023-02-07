@@ -47,7 +47,7 @@ export class AuthRepository {
         throw new ConflictException('Email already exists');
       }
       this.logger.error(`Error Signing up the user: ${email}`, '');
-      throw new InternalServerErrorException(`${err}`);
+      throw new InternalServerErrorException(err.message);
     }
   }
 
@@ -70,12 +70,12 @@ export class AuthRepository {
     try {
       const user: User = await this.authRepository.findOneBy({ id });
       if (!user) {
-        this.logger.error(`User: ${id} not found`);
-        throw new UnauthorizedException();
+        this.logger.error(`User: ${id} not found`, '');
+        throw new UnauthorizedException(`User: ${id} not found`);
       }
       return user;
     } catch (err) {
-      throw new InternalServerErrorException(err);
+      throw new InternalServerErrorException(err.message);
     }
   }
 
@@ -127,6 +127,31 @@ export class AuthRepository {
     }
   }
 
+  async getUserWithRelation(id: string, relation: string): Promise<User[]> {
+    try {
+      let user: User[];
+      if (relation == 'following') {
+        user = await this.authRepository.find({
+          relations: { following: true },
+          where: { id },
+        });
+      }
+      if (relation == 'followers') {
+        user = await this.authRepository.find({
+          relations: { followers: true },
+          where: { id },
+        });
+      }
+      if (user.length == 0) {
+        this.logger.error(`User: ${id} not found`, '');
+        throw new UnauthorizedException(`User: ${id} not found`);
+      }
+      return user;
+    } catch (err) {
+      throw new InternalServerErrorException(err.message);
+    }
+  }
+
   async followUser(followUserDto: FollowUserDto): Promise<void> {
     const { id1, id2 } = followUserDto;
     if (id1 == id2) {
@@ -134,15 +159,8 @@ export class AuthRepository {
       throw new ConflictException(`User can't be the same`);
     }
 
+    const user1 = await this.getUserWithRelation(id1, 'following');
     const user2 = await this.getOneUser(id2);
-    const user1 = await this.authRepository.find({
-      relations: {
-        following: true,
-      },
-      where: {
-        id: id1,
-      },
-    });
 
     if (user1[0].following.find((u) => u.id == id2)) {
       this.logger.error(`User: ${id1} already following ${id2}`, '');
@@ -160,15 +178,8 @@ export class AuthRepository {
       throw new ConflictException(`User can't be the same`);
     }
 
+    const user1 = await this.getUserWithRelation(id1, 'following');
     const user2 = await this.getOneUser(id2);
-    const user1 = await this.authRepository.find({
-      relations: {
-        following: true,
-      },
-      where: {
-        id: id1,
-      },
-    });
 
     if (!user1[0].following.find((u) => u.id == id2)) {
       this.logger.error(`User: ${id1} is not following ${id2}`, '');
@@ -181,15 +192,7 @@ export class AuthRepository {
   }
 
   async getFollowers(id: string): Promise<User[]> {
-    const user1 = await this.authRepository.find({
-      relations: {
-        followers: true,
-      },
-      where: {
-        id,
-      },
-    });
-
+    const user1 = await this.getUserWithRelation(id, 'following');
     return user1[0].followers;
   }
   //Implementing get all following for a user
