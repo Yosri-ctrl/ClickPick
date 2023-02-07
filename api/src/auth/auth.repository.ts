@@ -179,6 +179,18 @@ export class AuthRepository {
 
     await this.authRepository.save(user1);
   }
-  //Implementing get all followers for a user
+
+  async getFollowers(id: string): Promise<User[]> {
+    const user1 = await this.authRepository.find({
+      relations: {
+        followers: true,
+      },
+      where: {
+        id,
+      },
+    });
+
+    return user1[0].followers;
+  }
   //Implementing get all following for a user
 }

@@ -48,4 +48,8 @@ export class AuthService {
   unfollowUser(followUserDto: FollowUserDto): Promise<void> {
     return this.authRepository.unfollowUser(followUserDto);
   }
+
+  getFollowers(id: string): Promise<User[]> {
+    return this.authRepository.getFollowers(id);
+  }
 }
