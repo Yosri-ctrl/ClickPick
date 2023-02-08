@@ -143,11 +143,15 @@ export class AuthRepository {
         });
       }
       if (user.length == 0) {
-        this.logger.error(`User: ${id} not found`, '');
-        throw new UnauthorizedException(`User: ${id} not found`);
+        throw new UnauthorizedException({ message: `User: ${id} not found` });
       }
       return user;
     } catch (err) {
+      if (err.status == 401) {
+        this.logger.error(`User: ${id} not found`, '');
+        throw new UnauthorizedException(`User: ${id} not found`, '');
+      }
+      this.logger.error(`${err.message}`, '');
       throw new InternalServerErrorException(err.message);
     }
   }
@@ -192,8 +196,12 @@ export class AuthRepository {
   }
 
   async getFollowers(id: string): Promise<User[]> {
-    const user1 = await this.getUserWithRelation(id, 'following');
+    const user1 = await this.getUserWithRelation(id, 'followers');
     return user1[0].followers;
   }
-  //Implementing get all following for a user
+
+  async getFollowing(id: string): Promise<User[]> {
+    const user1 = await this.getUserWithRelation(id, 'following');
+    return user1[0].following;
+  }
 }

@@ -102,7 +102,14 @@ export class AuthController {
     return this.authService.getFollowers(id);
   }
 
-  // POst request to populate db with 4 user
+  @Get('/:id/getfollowing')
+  @UseGuards(AuthGuard())
+  getFollowing(@Param('id') id: string): Promise<User[]> {
+    this.logger.verbose(`Getting user: ${id} followers`);
+    return this.authService.getFollowing(id);
+  }
+
+  // Post request to populate db with 4 user
   @Post('/signupmulti')
   async signupmulti(): Promise<User[]> {
     const signupauthdto1 = {

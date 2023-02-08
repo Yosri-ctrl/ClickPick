@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { AuthRepository } from './auth.repository';
 import { FollowUserDto } from './dto/follow-user.dto';
 import { SignInAuthDto } from './dto/sign-in-auth.dto';
@@ -51,5 +51,9 @@ export class AuthService {
 
   getFollowers(id: string): Promise<User[]> {
     return this.authRepository.getFollowers(id);
+  }
+
+  getFollowing(id: string): Promise<User[]> {
+    return this.authRepository.getFollowing(id);
   }
 }
