@@ -1,4 +1,3 @@
-import { User } from 'src/auth/user.entity';
 import { Pick } from 'src/pick/pick.entity';
 import {
   Column,
@@ -6,12 +5,14 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { GroupsRole } from './groupsRole/groupsRole.entity';
 
 @Entity()
-export class Groups {
+export class Group {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -19,14 +20,13 @@ export class Groups {
   title: string;
 
   @Column()
-  Decriptin: string;
+  description: string;
 
   @Column()
   type: groupTypes;
 
-  @ManyToMany(() => User, (user) => user.groups, { nullable: true })
-  @JoinTable()
-  users: User[];
+  @OneToMany(() => GroupsRole, (role) => role.group_id)
+  group_roles: GroupsRole[];
 
   @ManyToMany(() => Pick, (pick) => pick.group, { nullable: true })
   @JoinTable()

@@ -16,7 +16,7 @@ export class PickReposiroty {
   async createPick(createPickDto: CreatePickDto, user: User): Promise<Pick> {
     const { content } = createPickDto;
     const pick: Pick = this.pickEntityRepository.create({
-      content: content,
+      content,
       user,
     });
 
