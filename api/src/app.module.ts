@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { PickModule } from './pick/pick.module';
+import { GroupsModule } from './groups/groups.module';
 
 @Module({
   imports: [
@@ -19,8 +20,7 @@ import { PickModule } from './pick/pick.module';
     }),
     AuthModule,
     PickModule,
+    GroupsModule,
   ],
-  controllers: [],
-  providers: [],
 })
 export class AppModule {}

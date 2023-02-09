@@ -28,7 +28,7 @@ export class Groups {
   @JoinTable()
   users: User[];
 
-  @ManyToMany(() => Pick)
+  @ManyToMany(() => Pick, (pick) => pick.group, { nullable: true })
   @JoinTable()
   picks: Pick[];
 
