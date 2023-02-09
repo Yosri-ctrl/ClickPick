@@ -1,4 +1,5 @@
 import { Exclude } from 'class-transformer';
+import { Groups } from 'src/groups/group.entity';
 import { Pick } from 'src/pick/pick.entity';
 import {
   Column,
@@ -38,14 +39,15 @@ export class User {
   @JoinTable()
   following: User[];
 
-  // @Column({ nullable: true })
-  // groups: Group[];
+  @ManyToMany(() => Groups, (group) => group.users, { nullable: true })
+  groups: Groups[];
 
   // @Column({ nullable: true })
   // img: string;
 
   // @Column()
   // birth_date: Date;
+
   @CreateDateColumn({
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP(6)',

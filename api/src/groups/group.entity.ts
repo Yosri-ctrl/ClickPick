@@ -1,39 +1,36 @@
-import { Exclude } from 'class-transformer';
 import { User } from 'src/auth/user.entity';
-import { Groups } from 'src/groups/group.entity';
+import { Pick } from 'src/pick/pick.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
   ManyToMany,
-  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
-export class Pick {
+export class Groups {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  // @Column()
-  // user: User;
+  @Column({ unique: true })
+  title: string;
 
   @Column()
-  content: string;
+  Decriptin: string;
 
-  @Column({ default: 0 })
-  like: number;
+  @Column()
+  type: groupTypes;
 
-  @Column({ nullable: true })
-  comment: string;
+  @ManyToMany(() => User, (user) => user.groups, { nullable: true })
+  @JoinTable()
+  users: User[];
 
-  @ManyToOne(() => User, (user) => user.pick, { eager: false })
-  @Exclude({ toPlainOnly: true })
-  user: User;
-
-  @ManyToMany(() => Groups)
-  group: Groups[];
+  @ManyToMany(() => Pick)
+  @JoinTable()
+  picks: Pick[];
 
   @CreateDateColumn({
     type: 'timestamp',
@@ -47,4 +44,9 @@ export class Pick {
     onUpdate: 'CURRENT_TIMESTAMP(6)',
   })
   updated_at: Date;
+}
+
+export enum groupTypes {
+  privat = 'PRIVATE',
+  public = 'PUBLIC',
 }
