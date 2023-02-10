@@ -1,14 +1,12 @@
-import { Pick } from 'src/pick/pick.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinTable,
-  ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { GroupsPick } from './groupsPick/groupsPick.entity';
 import { GroupsRole } from './groupsRole/groupsRole.entity';
 
 @Entity()
@@ -28,9 +26,8 @@ export class Group {
   @OneToMany(() => GroupsRole, (role) => role.group_id)
   group_roles: GroupsRole[];
 
-  @ManyToMany(() => Pick, (pick) => pick.group, { nullable: true })
-  @JoinTable()
-  picks: Pick[];
+  @OneToMany(() => GroupsPick, (pick) => pick.group_id)
+  picks: GroupsPick[];
 
   @CreateDateColumn({
     type: 'timestamp',
