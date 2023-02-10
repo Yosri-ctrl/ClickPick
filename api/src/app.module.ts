@@ -8,6 +8,7 @@ import { User } from './auth/user.entity';
 import { Pick } from './pick/pick.entity';
 import { Group } from './groups/group.entity';
 import { GroupsRole } from './groups/groupsRole/groupsRole.entity';
+import { GroupsPick } from './groups/groupsPick/groupsPick.entity';
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { GroupsRole } from './groups/groupsRole/groupsRole.entity';
       port: parseInt(process.env.TYPEORM_PORT, 10),
       autoLoadEntities: true,
       synchronize: true,
-      entities: [User, Pick, Group, GroupsRole],
+      entities: [User, Pick, Group, GroupsRole, GroupsPick],
+      // logging: true,
     }),
     AuthModule,
     PickModule,
