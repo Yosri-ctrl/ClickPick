@@ -28,8 +28,10 @@ export class User {
   password: string;
 
   @OneToMany(() => Pick, (pick) => pick.user, { eager: true })
-  @Exclude({ toPlainOnly: true })
   pick: Pick[];
+
+  @OneToMany(() => GroupsRole, (role) => role.user_id)
+  group_roles: GroupsRole[];
 
   @ManyToMany(() => User, (user) => user.following)
   @Exclude({ toPlainOnly: true })
@@ -38,9 +40,6 @@ export class User {
   @ManyToMany(() => User, (user) => user.followers)
   @JoinTable()
   following: User[];
-
-  @OneToMany(() => GroupsRole, (role) => role.user_id)
-  group_roles: GroupsRole[];
 
   // @Column({ nullable: true })
   // img: string;

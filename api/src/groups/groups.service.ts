@@ -1,6 +1,7 @@
 import {
   ConflictException,
   Injectable,
+  InternalServerErrorException,
   Logger,
   NotFoundException,
   UnauthorizedException,
@@ -9,6 +10,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/auth/user.entity';
 import { Repository } from 'typeorm';
 import { CreateGroupDto } from './dto/create-group.dto';
+import { UpdateGroupTitleDto } from './dto/update-group-title.dto';
+import { UpdateGroupDescDto } from './dto/update-group-desc.dto';
 import { Group, groupTypes } from './group.entity';
 import { GroupsRole, roleType } from './groupsRole/groupsRole.entity';
 
@@ -62,15 +65,87 @@ export class GroupsService {
     return group;
   }
 
-  async getAllGroups(): Promise<Group[]> {
-    const quary = this.groupRepository.createQueryBuilder('group');
-    const groups = await quary.getMany();
-
-    if (!groups) {
-      this.logger.error(`Couldn't find groups`);
-      throw new UnauthorizedException();
+  async getAllGroups(search?: string): Promise<Group[]> {
+    const query = this.groupRepository.createQueryBuilder('group');
+    query.andWhere('group.type LIKE (:type)', { type: 'PUBLIC' });
+    if (search) {
+      query.andWhere(
+        '(LOWER(group.title) LIKE LOWER(:search) OR LOWER(group.description) LIKE LOWER(:search))',
+        { search: `%${search}%` },
+      );
     }
 
-    return groups;
+    try {
+      const groups = await query.getMany();
+      return groups;
+    } catch (err) {
+      this.logger.error(
+        `Failed to retrieve data for group with search: "${search}"`,
+        err.stack,
+      );
+      throw new InternalServerErrorException();
+    }
+  }
+
+  async updateGroupTitle(
+    updateGroupTitleDto: UpdateGroupTitleDto,
+    id: string,
+    user: User,
+  ): Promise<Group> {
+    const { title } = updateGroupTitleDto;
+    const group: Group = await this.getGroup(id);
+
+    const query = this.groupRoleRepository
+      .createQueryBuilder('role')
+      .where('role.group_id = :gid', { gid: group.id })
+      .andWhere('role.user_id = :uid', { uid: user.id });
+
+    const role = await query.getOne();
+    if (!role || role.role != 'OWNER') {
+      this.logger.error("User Dosen't have permission");
+      throw new UnauthorizedException("User Dosen't have permission");
+    }
+
+    // const newT = await this.groupRepository.findOneBy({ title: title });
+    // if (newT.title == title) {
+    //   this.logger.error('Title already exists');
+    //   throw new ConflictException('Title already exists');
+    // }
+
+    group.title = title;
+
+    await this.groupRepository.save(group);
+    return group;
+  }
+
+  async updateGroupDesc(
+    updateGroupDescDto: UpdateGroupDescDto,
+    id: string,
+    user: User,
+  ): Promise<Group> {
+    const { description } = updateGroupDescDto;
+    const group: Group = await this.getGroup(id);
+
+    const query = this.groupRoleRepository
+      .createQueryBuilder('role')
+      .where('role.group_id = :gid', { gid: group.id })
+      .andWhere('role.user_id = :uid', { uid: user.id });
+
+    const role = await query.getOne();
+    if (!role || role.role != 'OWNER') {
+      this.logger.error("User Dosen't have permission");
+      throw new UnauthorizedException("User Dosen't have permission");
+    }
+
+    // const newT = await this.groupRepository.findOneBy({ title: title });
+    // if (newT.title == title) {
+    //   this.logger.error('Title already exists');
+    //   throw new ConflictException('Title already exists');
+    // }
+
+    group.description = description;
+
+    await this.groupRepository.save(group);
+    return group;
   }
 }

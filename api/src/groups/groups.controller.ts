@@ -4,13 +4,17 @@ import {
   Get,
   Logger,
   Param,
+  Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { User } from 'src/auth/user.entity';
 import { CreateGroupDto } from './dto/create-group.dto';
+import { UpdateGroupDescDto } from './dto/update-group-desc.dto';
+import { UpdateGroupTitleDto } from './dto/update-group-title.dto';
 import { Group } from './group.entity';
 import { GroupsService } from './groups.service';
 
@@ -30,14 +34,32 @@ export class GroupsController {
   }
 
   @Get('/getall')
-  getAllGroups(): Promise<Group[]> {
+  getAllGroups(@Query('search') search: string): Promise<Group[]> {
     this.logger.verbose(`Getting all groups`);
-    return this.groupService.getAllGroups();
+    return this.groupService.getAllGroups(search);
   }
 
   @Get('/:id')
   getGroup(@Param('id') id: string): Promise<Group> {
     this.logger.verbose(`Getting group: '${id}'`);
     return this.groupService.getGroup(id);
+  }
+
+  @Patch('/:id/title')
+  updateGroupTilte(
+    @Body() updateGroupTitleDto: UpdateGroupTitleDto,
+    @GetUser() user: User,
+    @Param('id') id: string,
+  ): Promise<Group> {
+    return this.groupService.updateGroupTitle(updateGroupTitleDto, id, user);
+  }
+
+  @Patch('/:id/desc')
+  updateGroupDescriptiodn(
+    @Body() updateGroupDescDto: UpdateGroupDescDto,
+    @GetUser() user: User,
+    @Param('id') id: string,
+  ): Promise<Group> {
+    return this.groupService.updateGroupDesc(updateGroupDescDto, id, user);
   }
 }

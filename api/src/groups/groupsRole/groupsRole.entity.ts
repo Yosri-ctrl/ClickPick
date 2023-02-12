@@ -5,12 +5,12 @@ import { Group } from '../group.entity';
 @Entity()
 export class GroupsRole {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
-  @ManyToOne(() => User, (user_id) => user_id.group_roles)
+  @ManyToOne(() => User, (user_id) => user_id.group_roles, { eager: true })
   user_id: User;
 
-  @ManyToOne(() => Group, (group_id) => group_id.group_roles)
+  @ManyToOne(() => Group, (group_id) => group_id.users, { eager: true })
   group_id: Group;
 
   @Column()

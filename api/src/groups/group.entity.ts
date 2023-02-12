@@ -24,7 +24,7 @@ export class Group {
   type: groupTypes;
 
   @OneToMany(() => GroupsRole, (role) => role.group_id)
-  group_roles: GroupsRole[];
+  users: GroupsRole[];
 
   @OneToMany(() => GroupsPick, (pick) => pick.group_id)
   picks: GroupsPick[];
