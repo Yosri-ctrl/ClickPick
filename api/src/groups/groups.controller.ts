@@ -71,4 +71,9 @@ export class GroupsController {
   ) {
     return this.groupService.addAdmin(id, user, userToPromote);
   }
+
+  @Patch('/:id/join')
+  joinGroup(@GetUser() user: User, @Param('id') id: string): Promise<void> {
+    return this.groupService.joinGroup(user, id);
+  }
 }

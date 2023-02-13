@@ -87,23 +87,13 @@ export class GroupsService {
     }
   }
 
-  async getUserRole(
-    group: Group,
-    user: string,
-    roleToCheck: string,
-  ): Promise<GroupsRole> {
+  async getUserRole(group: Group, user: string): Promise<GroupsRole> {
     const query = this.groupRoleRepository
       .createQueryBuilder('role')
       .where('role.group_id = :gid', { gid: group.id })
       .andWhere('role.user_id = :uid', { uid: user });
 
-    const role = await query.getOne();
-    if (!role || role.role != roleToCheck) {
-      this.logger.error("User Dosen't have permission");
-      throw new UnauthorizedException("User Dosen't have permission");
-    }
-
-    return role;
+    return await query.getOne();
   }
 
   async updateGroupTitle(
@@ -114,14 +104,13 @@ export class GroupsService {
     const { title } = updateGroupTitleDto;
     const group: Group = await this.getGroup(id);
 
-    await this.getUserRole(group, user.id, 'OWNER');
+    const role = await this.getUserRole(group, user.id);
+    if (!role || role.role != 'OWNER') {
+      this.logger.error("User Dosen't have permission");
+      throw new UnauthorizedException("User Dosen't have permission");
+    }
 
-    // const newT = await this.groupRepository.findOneBy({ title: title });
-    // if (newT.title == title) {
-    //   this.logger.error('Title already exists');
-    //   throw new ConflictException('Title already exists');
-    // }
-
+    // Check if title already exists ...
     group.title = title;
 
     await this.groupRepository.save(group);
@@ -136,13 +125,11 @@ export class GroupsService {
     const { description } = updateGroupDescDto;
     const group: Group = await this.getGroup(id);
 
-    await this.getUserRole(group, user.id, 'OWNER');
-
-    // const newT = await this.groupRepository.findOneBy({ title: title });
-    // if (newT.title == title) {
-    //   this.logger.error('Title already exists');
-    //   throw new ConflictException('Title already exists');
-    // }
+    const role = await this.getUserRole(group, user.id);
+    if (!role || role.role != 'OWNER') {
+      this.logger.error("User Dosen't have permission");
+      throw new UnauthorizedException("User Dosen't have permission");
+    }
 
     group.description = description;
 
@@ -157,12 +144,42 @@ export class GroupsService {
   ): Promise<Group> {
     const group: Group = await this.getGroup(gid);
 
-    await this.getUserRole(group, user.id, 'OWNER');
-    const adminRole = await this.getUserRole(group, userToPromoteId, 'USER');
-    console.log(adminRole);
+    const role = await this.getUserRole(group, user.id);
+    if (!role || role.role != 'OWNER') {
+      this.logger.error("User Dosen't have permission");
+      throw new UnauthorizedException("User Dosen't have permission");
+    }
 
-    // adminRole.role = 'ADMIN';
+    const adminRole = await this.getUserRole(group, userToPromoteId);
+    if (!adminRole) {
+      this.logger.error('User is not joined to this group', '');
+      throw new UnauthorizedException('User is not joined to this group');
+    }
+    if (adminRole.role == 'ADMIN') {
+      this.logger.error('User is already an ADMIN', '');
+      throw new UnauthorizedException('User is already an ADMIN');
+    }
+
+    adminRole.role = roleType.admin;
+    await this.groupRoleRepository.save(adminRole);
 
     return group;
+  }
+
+  async joinGroup(user: User, id: string): Promise<void> {
+    const group: Group = await this.getGroup(id);
+
+    const role2 = await this.getUserRole(group, user.id);
+    if (role2) {
+      this.logger.error('User already joined this group', '');
+      throw new UnauthorizedException('User already joined this group');
+    }
+
+    const role: GroupsRole = this.groupRoleRepository.create({
+      group_id: group,
+      user_id: user,
+      role: roleType.user,
+    });
+    await this.groupRoleRepository.save(role);
   }
 }
