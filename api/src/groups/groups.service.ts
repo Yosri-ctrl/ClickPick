@@ -87,6 +87,25 @@ export class GroupsService {
     }
   }
 
+  async getUserRole(
+    group: Group,
+    user: string,
+    roleToCheck: string,
+  ): Promise<GroupsRole> {
+    const query = this.groupRoleRepository
+      .createQueryBuilder('role')
+      .where('role.group_id = :gid', { gid: group.id })
+      .andWhere('role.user_id = :uid', { uid: user });
+
+    const role = await query.getOne();
+    if (!role || role.role != roleToCheck) {
+      this.logger.error("User Dosen't have permission");
+      throw new UnauthorizedException("User Dosen't have permission");
+    }
+
+    return role;
+  }
+
   async updateGroupTitle(
     updateGroupTitleDto: UpdateGroupTitleDto,
     id: string,
@@ -95,16 +114,7 @@ export class GroupsService {
     const { title } = updateGroupTitleDto;
     const group: Group = await this.getGroup(id);
 
-    const query = this.groupRoleRepository
-      .createQueryBuilder('role')
-      .where('role.group_id = :gid', { gid: group.id })
-      .andWhere('role.user_id = :uid', { uid: user.id });
-
-    const role = await query.getOne();
-    if (!role || role.role != 'OWNER') {
-      this.logger.error("User Dosen't have permission");
-      throw new UnauthorizedException("User Dosen't have permission");
-    }
+    await this.getUserRole(group, user.id, 'OWNER');
 
     // const newT = await this.groupRepository.findOneBy({ title: title });
     // if (newT.title == title) {
@@ -126,16 +136,7 @@ export class GroupsService {
     const { description } = updateGroupDescDto;
     const group: Group = await this.getGroup(id);
 
-    const query = this.groupRoleRepository
-      .createQueryBuilder('role')
-      .where('role.group_id = :gid', { gid: group.id })
-      .andWhere('role.user_id = :uid', { uid: user.id });
-
-    const role = await query.getOne();
-    if (!role || role.role != 'OWNER') {
-      this.logger.error("User Dosen't have permission");
-      throw new UnauthorizedException("User Dosen't have permission");
-    }
+    await this.getUserRole(group, user.id, 'OWNER');
 
     // const newT = await this.groupRepository.findOneBy({ title: title });
     // if (newT.title == title) {
@@ -146,6 +147,22 @@ export class GroupsService {
     group.description = description;
 
     await this.groupRepository.save(group);
+    return group;
+  }
+
+  async addAdmin(
+    gid: string,
+    user: User,
+    userToPromoteId: string,
+  ): Promise<Group> {
+    const group: Group = await this.getGroup(gid);
+
+    await this.getUserRole(group, user.id, 'OWNER');
+    const adminRole = await this.getUserRole(group, userToPromoteId, 'USER');
+    console.log(adminRole);
+
+    // adminRole.role = 'ADMIN';
+
     return group;
   }
 }

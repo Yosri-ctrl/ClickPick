@@ -62,4 +62,13 @@ export class GroupsController {
   ): Promise<Group> {
     return this.groupService.updateGroupDesc(updateGroupDescDto, id, user);
   }
+
+  @Patch('/:id/admin')
+  addAdmin(
+    @Body('user') userToPromote: string,
+    @GetUser() user: User,
+    @Param('id') id: string,
+  ) {
+    return this.groupService.addAdmin(id, user, userToPromote);
+  }
 }
