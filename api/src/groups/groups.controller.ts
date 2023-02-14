@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Logger,
   Param,
@@ -51,6 +52,7 @@ export class GroupsController {
     @GetUser() user: User,
     @Param('id') id: string,
   ): Promise<Group> {
+    //logging
     return this.groupService.updateGroupTitle(updateGroupTitleDto, id, user);
   }
 
@@ -60,6 +62,7 @@ export class GroupsController {
     @GetUser() user: User,
     @Param('id') id: string,
   ): Promise<Group> {
+    //logging
     return this.groupService.updateGroupDesc(updateGroupDescDto, id, user);
   }
 
@@ -69,11 +72,19 @@ export class GroupsController {
     @GetUser() user: User,
     @Param('id') id: string,
   ) {
+    //logging
     return this.groupService.addAdmin(id, user, userToPromote);
   }
 
   @Patch('/:id/join')
   joinGroup(@GetUser() user: User, @Param('id') id: string): Promise<void> {
+    //logging
     return this.groupService.joinGroup(user, id);
+  }
+
+  @Delete('/:id/leave')
+  leaveGroup(@GetUser() user: User, @Param('id') id: string): Promise<void> {
+    //logging
+    return this.groupService.leaveGroup(user, id);
   }
 }

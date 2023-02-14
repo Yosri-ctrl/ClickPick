@@ -182,4 +182,16 @@ export class GroupsService {
     });
     await this.groupRoleRepository.save(role);
   }
+
+  async leaveGroup(user: User, id: string): Promise<void> {
+    const group: Group = await this.getGroup(id);
+    //Check if user is owner ... => can't remove owner
+
+    const role = await this.getUserRole(group, user.id);
+    if (!role) {
+      this.logger.error('User is not joined to this group', '');
+      throw new UnauthorizedException('User is not joined to this group');
+    }
+    await this.groupRoleRepository.delete(role);
+  }
 }
