@@ -52,7 +52,7 @@ export class GroupsController {
     @GetUser() user: User,
     @Param('id') id: string,
   ): Promise<Group> {
-    //logging
+    this.logger.verbose(`Updatig title for group: '${id}'`);
     return this.groupService.updateGroupTitle(updateGroupTitleDto, id, user);
   }
 
@@ -62,7 +62,7 @@ export class GroupsController {
     @GetUser() user: User,
     @Param('id') id: string,
   ): Promise<Group> {
-    //logging
+    this.logger.verbose(`Updatig description group: '${id}'`);
     return this.groupService.updateGroupDesc(updateGroupDescDto, id, user);
   }
 
@@ -72,19 +72,19 @@ export class GroupsController {
     @GetUser() user: User,
     @Param('id') id: string,
   ) {
-    //logging
+    this.logger.verbose(`Adding an admin to group: '${id}'`);
     return this.groupService.addAdmin(id, user, userToPromote);
   }
 
   @Patch('/:id/join')
   joinGroup(@GetUser() user: User, @Param('id') id: string): Promise<void> {
-    //logging
+    this.logger.verbose(`Join user: ${user.id} group: '${id}'`);
     return this.groupService.joinGroup(user, id);
   }
 
   @Delete('/:id/leave')
   leaveGroup(@GetUser() user: User, @Param('id') id: string): Promise<void> {
-    //logging
+    this.logger.verbose(`Removing user: ${user.id} group: '${id}'`);
     return this.groupService.leaveGroup(user, id);
   }
 }

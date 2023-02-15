@@ -25,6 +25,12 @@ export class GroupsService {
   ) {}
   private logger = new Logger('Groups service');
 
+  /**
+   * It creates a group and assigns the user who created the group as the owner of the group
+   * @param {CreateGroupDto} createGroupDto - CreateGroupDto - Have a title and description.
+   * @param {User} user - User - this is the user that is currently logged in.
+   * @returns Group
+   */
   async createGroup(
     createGroupDto: CreateGroupDto,
     user: User,
@@ -56,6 +62,11 @@ export class GroupsService {
     return group;
   }
 
+  /**
+   * It gets a group by its id
+   * @param {string} id - string - The id of the group we want to retrieve.
+   * @returns Group
+   */
   async getGroup(id: string): Promise<Group> {
     const group: Group = await this.groupRepository.findOneBy({ id });
     if (!group) {
@@ -65,6 +76,12 @@ export class GroupsService {
     return group;
   }
 
+  /**
+   * It returns a list of groups that are public and match the search criteria
+   * @param {string} [search] - string - This is the search parameter that we will pass in from the
+   * controller.
+   * @returns An array of groups
+   */
   async getAllGroups(search?: string): Promise<Group[]> {
     const query = this.groupRepository.createQueryBuilder('group');
     query.andWhere('group.type LIKE (:type)', { type: 'PUBLIC' });
@@ -87,6 +104,12 @@ export class GroupsService {
     }
   }
 
+  /**
+   * Get the role of a user in a group.
+   * @param {Group} group - Group - The group object that we're getting the role for
+   * @param {string} user - The user's ID
+   * @returns A GroupRole object
+   */
   async getUserRole(group: Group, user: string): Promise<GroupsRole> {
     const query = this.groupRoleRepository
       .createQueryBuilder('role')
@@ -96,6 +119,13 @@ export class GroupsService {
     return await query.getOne();
   }
 
+  /**
+   * It updates the title of a group
+   * @param {UpdateGroupTitleDto} updateGroupTitleDto - UpdateGroupTitleDto.
+   * @param {string} id - The id of the group to be updated
+   * @param {User} user - User - The user who is making the request.
+   * @returns Group
+   */
   async updateGroupTitle(
     updateGroupTitleDto: UpdateGroupTitleDto,
     id: string,
@@ -105,18 +135,32 @@ export class GroupsService {
     const group: Group = await this.getGroup(id);
 
     const role = await this.getUserRole(group, user.id);
-    if (!role || role.role != 'OWNER') {
+    if (!role || role.role == 'USER') {
       this.logger.error("User Dosen't have permission");
       throw new UnauthorizedException("User Dosen't have permission");
     }
 
-    // Check if title already exists ...
+    const checkTitle: Group = await this.groupRepository.findOneBy({ title });
+    if (checkTitle) {
+      this.logger.error(`Group with title: '${title}' already exists`, '');
+      throw new ConflictException(
+        `Group with title: '${title}' already exists`,
+      );
+    }
+
     group.title = title;
 
     await this.groupRepository.save(group);
     return group;
   }
 
+  /**
+   * This function updates the description of a group
+   * @param {UpdateGroupDescDto} updateGroupDescDto - UpdateGroupDescDto
+   * @param {string} id - The user who is making the request.
+   * @param {User} user - User - This is the user object that is passed in from the auth guard.
+   * @returns Group
+   */
   async updateGroupDesc(
     updateGroupDescDto: UpdateGroupDescDto,
     id: string,
@@ -126,7 +170,7 @@ export class GroupsService {
     const group: Group = await this.getGroup(id);
 
     const role = await this.getUserRole(group, user.id);
-    if (!role || role.role != 'OWNER') {
+    if (!role || role.role == 'USER') {
       this.logger.error("User Dosen't have permission");
       throw new UnauthorizedException("User Dosen't have permission");
     }
@@ -137,6 +181,13 @@ export class GroupsService {
     return group;
   }
 
+  /**
+   * It adds a user to the group as an admin
+   * @param {string} gid - The group id
+   * @param {User} user - The user who is making the request.
+   * @param {string} userToPromoteId - The user id of the user you want to promote to admin.
+   * @returns Group
+   */
   async addAdmin(
     gid: string,
     user: User,
@@ -155,10 +206,12 @@ export class GroupsService {
       this.logger.error('User is not joined to this group', '');
       throw new UnauthorizedException('User is not joined to this group');
     }
-    if (adminRole.role == 'ADMIN') {
+    if (adminRole.role != 'USER') {
       this.logger.error('User is already an ADMIN', '');
       throw new UnauthorizedException('User is already an ADMIN');
     }
+
+    // Check if there is no more then 3 admins ...
 
     adminRole.role = roleType.admin;
     await this.groupRoleRepository.save(adminRole);
@@ -166,6 +219,12 @@ export class GroupsService {
     return group;
   }
 
+  /**
+   * The function takes in a user and a group id, and then checks if the user is already in the group.
+   * If the user is not in the group, the function adds the user to the group
+   * @param {User} user - User - The user that is joining the group
+   * @param {string} id - The id of the group you want to join
+   */
   async joinGroup(user: User, id: string): Promise<void> {
     const group: Group = await this.getGroup(id);
 
@@ -183,6 +242,11 @@ export class GroupsService {
     await this.groupRoleRepository.save(role);
   }
 
+  /**
+   * The function takes in a user and a group id, and then deletes the user's role in the group
+   * @param {User} user - User - The user object that is currently logged in.
+   * @param {string} id - The id of the group
+   */
   async leaveGroup(user: User, id: string): Promise<void> {
     const group: Group = await this.getGroup(id);
     //Check if user is owner ... => can't remove owner
