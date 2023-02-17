@@ -211,7 +211,16 @@ export class GroupsService {
       throw new UnauthorizedException('User is already an ADMIN');
     }
 
-    // Check if there is no more then 3 admins ...
+    const query = await this.groupRoleRepository
+      .createQueryBuilder('role')
+      .where('role.group_id = :gid', { gid: group.id })
+      .andWhere("role.role = 'ADMIN'")
+      .getMany();
+
+    if (query.length > 3) {
+      this.logger.error('There are already 3 admins', '');
+      throw new UnauthorizedException('There are already 3 admins');
+    }
 
     adminRole.role = roleType.admin;
     await this.groupRoleRepository.save(adminRole);
@@ -249,13 +258,32 @@ export class GroupsService {
    */
   async leaveGroup(user: User, id: string): Promise<void> {
     const group: Group = await this.getGroup(id);
-    //Check if user is owner ... => can't remove owner
 
     const role = await this.getUserRole(group, user.id);
     if (!role) {
       this.logger.error('User is not joined to this group', '');
       throw new UnauthorizedException('User is not joined to this group');
     }
+    if (role.role == 'OWNER') {
+      this.logger.error("Owner can't leave group", '');
+      throw new UnauthorizedException("Owner can't leave group");
+    }
     await this.groupRoleRepository.delete(role);
+  }
+
+  async getAllUsers(id: string): Promise<User[]> {
+    const query = await this.groupRoleRepository
+      .createQueryBuilder('role')
+      .leftJoinAndSelect('role.user_id', 'user')
+      .where('role.group_id = :gid', { gid: id })
+      .getMany();
+    console.log(query);
+
+    const users: User[] = [];
+    for (let i = 0; i < query.length; i++) {
+      users.push(query[i].user_id);
+    }
+
+    return users;
   }
 }

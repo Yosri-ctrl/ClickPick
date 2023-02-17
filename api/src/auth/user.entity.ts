@@ -51,6 +51,7 @@ export class User {
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP(6)',
   })
+  @Exclude({ toPlainOnly: true })
   created_at: Date;
 
   @UpdateDateColumn({
@@ -58,5 +59,6 @@ export class User {
     default: () => 'CURRENT_TIMESTAMP(6)',
     onUpdate: 'CURRENT_TIMESTAMP(6)',
   })
+  @Exclude({ toPlainOnly: true })
   updated_at: Date;
 }
