@@ -272,6 +272,12 @@ export class GroupsService {
     await this.groupRoleRepository.delete(role);
   }
 
+  /**
+   * It gets all the users in a group by querying the group_role table for all the roles in a group,
+   * then it gets the user_id from the role and pushes it into an array
+   * @param {string} id - string - the id of the group
+   * @returns An array of users
+   */
   async getAllUsers(id: string): Promise<User[]> {
     const query = await this.groupRoleRepository
       .createQueryBuilder('role')
@@ -288,6 +294,13 @@ export class GroupsService {
     return users;
   }
 
+  /**
+   * It changes the group type to the one specified in the request body
+   * @param {string} id - The id of the group you want to change the type of.
+   * @param {UpdateGroupTypeDto} updateGroupTypeDto - UpdateGroupTypeDto
+   * @param {User} user - User - this is the user that is currently logged in.
+   * @returns Group
+   */
   async changeGroupType(
     id: string,
     updateGroupTypeDto: UpdateGroupTypeDto,

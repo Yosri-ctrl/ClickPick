@@ -97,18 +97,21 @@ export class GroupsController {
     return this.groupService.leaveGroup(user, id);
   }
 
+  /* This is a method that is used to get all users from a group. */
   @Get('/:id/users')
   getAllUsers(@Param('id') id: string): Promise<User[]> {
     this.logger.verbose(`Get all users from group: ${id}`);
     return this.groupService.getAllUsers(id);
   }
 
+  /* This is a method that is used to change the type of a group. */
   @Patch('/:id/type')
   changeGroupType(
     @GetUser() user: User,
     @Param('id') id: string,
     @Body() type: UpdateGroupTypeDto,
   ): Promise<Group> {
+    this.logger.verbose(`Change group type: ${id}`);
     return this.groupService.changeGroupType(id, type, user);
   }
 }
