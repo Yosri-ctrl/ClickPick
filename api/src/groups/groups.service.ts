@@ -14,6 +14,7 @@ import { UpdateGroupTitleDto } from './dto/update-group-title.dto';
 import { UpdateGroupDescDto } from './dto/update-group-desc.dto';
 import { Group, groupTypes } from './group.entity';
 import { GroupsRole, roleType } from './groupsRole/groupsRole.entity';
+import { UpdateGroupTypeDto } from './dto/update-group-type.dto';
 
 @Injectable()
 export class GroupsService {
@@ -285,5 +286,29 @@ export class GroupsService {
     }
 
     return users;
+  }
+
+  async changeGroupType(
+    id: string,
+    updateGroupTypeDto: UpdateGroupTypeDto,
+    user: User,
+  ): Promise<Group> {
+    const { type } = updateGroupTypeDto;
+    const group: Group = await this.getGroup(id);
+
+    const role = await this.getUserRole(group, user.id);
+    if (!role) {
+      this.logger.error('User is not joined to this group', '');
+      throw new UnauthorizedException('User is not joined to this group');
+    }
+    if (role.role == 'USER') {
+      this.logger.error("User can't change group type", '');
+      throw new UnauthorizedException("User can't change group type");
+    }
+
+    group.type = type;
+
+    await this.groupRepository.save(group);
+    return group;
   }
 }

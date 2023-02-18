@@ -16,6 +16,7 @@ import { User } from 'src/auth/user.entity';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { UpdateGroupDescDto } from './dto/update-group-desc.dto';
 import { UpdateGroupTitleDto } from './dto/update-group-title.dto';
+import { UpdateGroupTypeDto } from './dto/update-group-type.dto';
 import { Group } from './group.entity';
 import { GroupsService } from './groups.service';
 
@@ -100,5 +101,14 @@ export class GroupsController {
   getAllUsers(@Param('id') id: string): Promise<User[]> {
     this.logger.verbose(`Get all users from group: ${id}`);
     return this.groupService.getAllUsers(id);
+  }
+
+  @Patch('/:id/type')
+  changeGroupType(
+    @GetUser() user: User,
+    @Param('id') id: string,
+    @Body() type: UpdateGroupTypeDto,
+  ): Promise<Group> {
+    return this.groupService.changeGroupType(id, type, user);
   }
 }
