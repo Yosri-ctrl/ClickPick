@@ -9,6 +9,7 @@ import { Pick } from './pick/pick.entity';
 import { Group } from './groups/group.entity';
 import { GroupsRole } from './groups/groupsRole/groupsRole.entity';
 import { GroupsPick } from './groups/groupsPick/groupsPick.entity';
+import { CommentsModule } from './comments/comments.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { GroupsPick } from './groups/groupsPick/groupsPick.entity';
     AuthModule,
     PickModule,
     GroupsModule,
+    CommentsModule,
   ],
 })
 export class AppModule {}
