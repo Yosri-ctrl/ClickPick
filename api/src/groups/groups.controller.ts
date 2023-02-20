@@ -114,4 +114,24 @@ export class GroupsController {
     this.logger.verbose(`Change group type: ${id}`);
     return this.groupService.changeGroupType(id, type, user);
   }
+
+  @Delete('/:id/admin')
+  removeAdmin(
+    @GetUser() user: User,
+    @Param('id') id: string,
+    @Body('admin') admin: string,
+  ) {
+    this.logger.verbose(`Removing admin: ${admin}`);
+    return this.groupService.removeAdmin(id, user, admin);
+  }
+
+  @Delete('/:id/user')
+  removeUser(
+    @GetUser() user: User,
+    @Param('id') id: string,
+    @Body('user') toBeOut: string,
+  ) {
+    this.logger.verbose(`Removing user: ${toBeOut}`);
+    return this.groupService.removeUser(id, user, toBeOut);
+  }
 }

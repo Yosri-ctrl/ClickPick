@@ -97,10 +97,7 @@ export class GroupsService {
       const groups = await query.getMany();
       return groups;
     } catch (err) {
-      this.logger.error(
-        `Failed to retrieve data for group with search: "${search}"`,
-        err.stack,
-      );
+      this.logger.error(`Failed to retrieve data "${err.stack}"`);
       throw new InternalServerErrorException();
     }
   }
@@ -323,5 +320,42 @@ export class GroupsService {
 
     await this.groupRepository.save(group);
     return group;
+  }
+
+  async removeAdmin(id: string, user: User, admin: string): Promise<void> {
+    const group: Group = await this.getGroup(id);
+
+    const role: GroupsRole = await this.getUserRole(group, user.id);
+    if (!role || role.role != 'OWNER') {
+      this.logger.error('User is not authorised', '');
+      throw new UnauthorizedException('User is not authorised');
+    }
+
+    const adminrole: GroupsRole = await this.getUserRole(group, admin);
+    if (!adminrole || adminrole.role != 'ADMIN') {
+      this.logger.error('User is not an admin', '');
+      throw new UnauthorizedException('User is not an admin');
+    }
+
+    adminrole.role = roleType.user;
+    await this.groupRoleRepository.save(adminrole);
+  }
+
+  async removeUser(id: string, user: User, toBeOut: string): Promise<void> {
+    const group: Group = await this.getGroup(id);
+
+    const role: GroupsRole = await this.getUserRole(group, user.id);
+    if (!role || role.role == 'USER') {
+      this.logger.error('User is not authorised', '');
+      throw new UnauthorizedException('User is not authorised');
+    }
+
+    const userRole: GroupsRole = await this.getUserRole(group, toBeOut);
+    if (!userRole || userRole.role != 'USER') {
+      this.logger.error("Can't kick none user", '');
+      throw new UnauthorizedException("Can't kick none user");
+    }
+
+    await this.groupRoleRepository.delete(userRole);
   }
 }
