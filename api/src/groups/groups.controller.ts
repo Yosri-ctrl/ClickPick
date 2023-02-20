@@ -115,6 +115,7 @@ export class GroupsController {
     return this.groupService.changeGroupType(id, type, user);
   }
 
+  /* This is a method that is used to remove an admin from a group. */
   @Delete('/:id/admin')
   removeAdmin(
     @GetUser() user: User,
@@ -125,6 +126,7 @@ export class GroupsController {
     return this.groupService.removeAdmin(id, user, admin);
   }
 
+  /* This is a method that is used to remove a user from a group. */
   @Delete('/:id/user')
   removeUser(
     @GetUser() user: User,

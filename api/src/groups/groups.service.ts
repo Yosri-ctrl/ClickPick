@@ -322,6 +322,12 @@ export class GroupsService {
     return group;
   }
 
+  /**
+   * This function removes an admin from a group
+   * @param {string} id - The id of the group
+   * @param {User} user - User - The user who is making the request
+   * @param {string} admin - the user id of the admin to be removed
+   */
   async removeAdmin(id: string, user: User, admin: string): Promise<void> {
     const group: Group = await this.getGroup(id);
 
@@ -341,6 +347,12 @@ export class GroupsService {
     await this.groupRoleRepository.save(adminrole);
   }
 
+  /**
+   * It removes a user from a group
+   * @param {string} id - The id of the group
+   * @param {User} user - User - the user who is trying to kick the other user
+   * @param {string} toBeOut - the user to be kicked out of the group
+   */
   async removeUser(id: string, user: User, toBeOut: string): Promise<void> {
     const group: Group = await this.getGroup(id);
 
