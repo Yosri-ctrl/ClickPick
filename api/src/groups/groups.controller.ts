@@ -136,4 +136,10 @@ export class GroupsController {
     this.logger.verbose(`Removing user: ${toBeOut}`);
     return this.groupService.removeUser(id, user, toBeOut);
   }
+
+  /* This is a method that is used to delete a group. */
+  @Delete('/:id/group')
+  deleteGroup(@GetUser() user: User, @Param('id') id: string) {
+    return this.groupService.deletGroup(id, user);
+  }
 }

@@ -370,4 +370,24 @@ export class GroupsService {
 
     await this.groupRoleRepository.delete(userRole);
   }
+
+  /**
+   * It deletes a group and all the roles related to it
+   * @param {string} id - The id of the group to be deleted
+   * @param {User} user - User - The user object that is passed in from the controller.
+   */
+  async deletGroup(id: string, user: User): Promise<void> {
+    const group: Group = await this.getGroup(id);
+
+    const role: GroupsRole = await this.getUserRole(group, user.id);
+    if (!role || role.role != 'OWNER') {
+      this.logger.error('User is not authorised', '');
+      throw new UnauthorizedException('User is not authorised');
+    }
+
+    await this.groupRepository.delete(group);
+
+    // Delete all role related to this group
+    await this.groupRoleRepository.delete(role);
+  }
 }
