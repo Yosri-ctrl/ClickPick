@@ -1,3 +1,4 @@
+import { Pick } from 'src/pick/pick.entity';
 import {
   Column,
   CreateDateColumn,
@@ -6,7 +7,6 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { GroupsPick } from './groupsPick/groupsPick.entity';
 import { GroupsRole } from './groupsRole/groupsRole.entity';
 
 @Entity()
@@ -26,8 +26,8 @@ export class Group {
   @OneToMany(() => GroupsRole, (role) => role.group_id)
   users: GroupsRole[];
 
-  @OneToMany(() => GroupsPick, (pick) => pick.group_id)
-  picks: GroupsPick[];
+  @OneToMany(() => Pick, (pick) => pick.group)
+  pick: Pick;
 
   @CreateDateColumn({
     type: 'timestamp',

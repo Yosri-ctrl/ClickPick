@@ -1,6 +1,6 @@
 import { Exclude } from 'class-transformer';
 import { User } from 'src/auth/user.entity';
-import { GroupsPick } from 'src/groups/groupsPick/groupsPick.entity';
+import { Group } from 'src/groups/group.entity';
 import {
   Column,
   CreateDateColumn,
@@ -15,24 +15,22 @@ export class Pick {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  // @Column()
-  // user: User;
-
   @Column()
   content: string;
 
   @Column({ default: 0 })
   like: number;
 
-  @Column({ nullable: true })
-  comment: string;
+  // @Column({ nullable: true })
+  // comment: string;
 
   @ManyToOne(() => User, (user) => user.pick, { eager: false })
   @Exclude({ toPlainOnly: true })
   user: User;
 
-  @ManyToOne(() => GroupsPick, (group) => group.pick_id)
-  group: GroupsPick[];
+  @ManyToOne(() => Group, (group) => group.pick, { eager: false })
+  @Exclude({ toPlainOnly: true })
+  group: Group;
 
   @CreateDateColumn({
     type: 'timestamp',
