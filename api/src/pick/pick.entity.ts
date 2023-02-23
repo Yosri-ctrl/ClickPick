@@ -18,8 +18,8 @@ export class Pick {
   @Column()
   content: string;
 
-  @Column({ default: 0 })
-  like: number;
+  // @Column({ default: 0 })
+  // like: number;
 
   // @Column({ nullable: true })
   // comment: string;
