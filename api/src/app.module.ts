@@ -8,7 +8,6 @@ import { User } from './auth/user.entity';
 import { Pick } from './pick/pick.entity';
 import { Group } from './groups/group.entity';
 import { GroupsRole } from './groups/groupsRole/groupsRole.entity';
-import { GroupsPick } from './groups/groupsPick/groupsPick.entity';
 import { CommentsModule } from './comments/comments.module';
 
 @Module({
@@ -23,7 +22,7 @@ import { CommentsModule } from './comments/comments.module';
       port: parseInt(process.env.TYPEORM_PORT, 10),
       autoLoadEntities: true,
       synchronize: true,
-      entities: [User, Pick, Group, GroupsRole, GroupsPick],
+      entities: [User, Pick, Group, GroupsRole],
       // logging: true,
     }),
     AuthModule,

@@ -26,8 +26,8 @@ export class Group {
   @OneToMany(() => GroupsRole, (role) => role.group_id)
   users: GroupsRole[];
 
-  @OneToMany(() => Pick, (pick) => pick.group)
-  pick: Pick;
+  @OneToMany(() => Pick, (pick) => pick.group, { eager: true })
+  pick: Pick[];
 
   @CreateDateColumn({
     type: 'timestamp',

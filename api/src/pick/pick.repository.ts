@@ -1,7 +1,7 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/auth/user.entity';
-import { Group } from 'src/groups/group.entity';
+// import { Group } from 'src/groups/group.entity';
 import { Repository } from 'typeorm';
 import { CreatePickDto } from './dto/create-pick.dto';
 import { Pick } from './pick.entity';
@@ -10,9 +10,7 @@ import { Pick } from './pick.entity';
 export class PickReposiroty {
   constructor(
     @InjectRepository(Pick)
-    private readonly pickEntityRepository: Repository<Pick>,
-    @InjectRepository(Group)
-    private readonly groupEntityRepository: Repository<Group>,
+    private readonly pickEntityRepository: Repository<Pick>, // @InjectRepository(Group) // private readonly groupEntityRepository: Repository<Group>,
   ) {}
   private logger = new Logger('Pick repository');
 
@@ -24,12 +22,12 @@ export class PickReposiroty {
    */
   async createPick(createPickDto: CreatePickDto, user: User): Promise<Pick> {
     const { content, id } = createPickDto;
-    const group: Group = await this.groupEntityRepository.findOneBy({ id });
+    // const group: Group = await this.groupEntityRepository.findOneBy({ id });
 
     const pick: Pick = this.pickEntityRepository.create({
       content,
       user,
-      group,
+      // group,
     });
 
     await this.pickEntityRepository.save(pick);
