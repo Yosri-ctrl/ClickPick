@@ -2,30 +2,11 @@
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+A social media app using MERN stack, has a responsive design, easy to use, with common feature from other social media apps for better scalability, a chat system and other features.
 
+Pick = Post
 ## Installation
 
 ```bash
@@ -58,16 +39,127 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Support
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### Main features:
+* [x] Creating an account
+	* [x] Sign Up
+	* [x] Login
+	* [x] Delete Account
+	* [x] Update Account
+* [ ] Posting a pick
+	* [ ] Include attachment: Image, location, Video and Text
+	* [ ] Edit pick
+	* [ ] Delete pick
+* [x] Adding friends
+	* [x] delete friend
+	* [x] Follow up
+	* [ ] Receiving picks from friends
+* [x] Creating groups
+	* [x] Private or Public
+	* [ ] Adding other users to the group (link for invite in case of private)
+	* [x] Posting in groups
 
-## Stay in touch
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### Next features:
+* [ ] Groups:
+	* [ ] Adding voting pools
+* [ ] Stories (a post with timer)
+* [ ] Chat
+* [ ] Group Chat
+* [ ] Events
 
-## License
+### Data Base Schemas:
+|Pick| |
+|-|-|
+|id|string|
+|user|User|
+|group|Group|
+|content|string|
+|likes|number|
+|comment|Comment[]|
+|created_at|Date|
+|updated_at|Date|
+* [x] create pick
+* [ ] get one pick
+* [ ] get all picks from this user => User page
+* [ ] get all picks from this group => Group page
+* [ ] get all picks from all groups from this user=> Home page
+* [ ] get all picks from all groups all users => random picks
+* [ ] get all picks from this group from this user => specific picks
+* [ ] update content
+* [ ] update like +/-
+* [ ] delete pick
 
-Nest is [MIT licensed](LICENSE).
+
+|User| |
+|-|-|
+|id|string|
+|username|string|
+|email|string|
+|password|string|
+|followers|User[]|
+|following|User[]|
+|group|Group[]|
+|total_likes|number| //{comment, pick}
+|birth_date|Date|
+|img|string|
+|admin|boolean|
+* [x] Sign Up
+* [x] Sign In
+* [x] get user
+* [x] get all users
+* [x] update user username
+* [x] update user password
+* [x] delete user
+* [x] follow a user
+* [x] unfollow a user
+* [x] get all user following users
+* [x] get all user followers users
+
+* [ ] get user comments like
+* [ ] get user picks likes
+
+|Group| |
+|-|-|
+|id|string|
+|title|string|
+|description|string|
+|type|enum(public, private)|
+|tags|string TODO| 
+|users|User[]|
+|picks|Pick[]|
+|img|string TODO|
+|Rules| string TODO|
+* [x] create group
+* [x] get a group
+* [x] get all groups
+* [x] get all groups by search query
+* [ ] get all groups by tags TODO
+* [x] update group title (owner + admin)
+* [x] update group description (owner + admin)
+* [ ] change owner (owner)
+* [x] change type (owner + admin)
+* [x] add admin (owner)
+* [x] remove admin (owner)
+* [x] remove users (owner + admin)
+* [ ] delete group (owner) 
+	* [ ] delete all roles related to this group 
+	* [ ] delete all picks in this group
+
+* [x] join group
+* [x] check if user joined this group
+* [x] leave group
+* [x] get all user groups
+	* [ ] mark user deleted if not found
+
+
+|Comment| |
+|-|-|
+|id|string|
+|pick|Pick|
+|user|User|
+|content|string|
+|like|number|
+|comments|Comment[]|
+* [ ] Create comment
+* [ ] get all comments for one pick
