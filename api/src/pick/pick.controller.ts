@@ -1,7 +1,6 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
   Logger,
   Param,
@@ -51,6 +50,12 @@ export class PickController {
   getAllPick(@GetUser() user: User): Promise<Pick[]> {
     this.logger.verbose(`Fetching data for all Picks from user: ${user.id}`);
     return this.pickService.getAllPicksFromUser(user);
+  }
+
+  @Get('/groupallpicks')
+  getAllPicksGroup(@Param('id') id: string): Promise<Pick[]> {
+    this.logger.verbose(`Getting all picks from gruop: ${id}`);
+    return this.pickService.getAllPicksFromGroup(id);
   }
 
   // @Delete('/:id')

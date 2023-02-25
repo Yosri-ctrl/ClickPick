@@ -90,4 +90,23 @@ export class PickService {
 
     return picks;
   }
+
+  /**
+   * It returns all the picks from a group
+   * @param {string} id - string - the id of the group you want to get the picks from
+   * @returns An array of Pick objects
+   */
+  async getAllPicksFromGroup(id: string): Promise<Pick[]> {
+    const picks = await this.pickEntityRepository
+      .createQueryBuilder('pick')
+      .where('pick.group = :gid', { gid: id })
+      .getMany();
+
+    if (!picks) {
+      this.logger.error('Picks not found');
+      throw new NotFoundException('Picks not found');
+    }
+
+    return picks;
+  }
 }
