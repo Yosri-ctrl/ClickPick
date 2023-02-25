@@ -35,12 +35,45 @@ export class PickService {
     return pick;
   }
 
+  /**
+   * It finds a pick by id and if it doesn't exist, it throws a NotFoundException
+   * @param {string} id - string - the id of the pick we want to retrieve
+   * @returns A pick object
+   */
   async getPickById(id: string): Promise<Pick> {
     const pick = await this.pickEntityRepository.findOneBy({ id });
     if (!pick) {
       this.logger.error(`Pick with id: ${id} not found`);
       throw new NotFoundException();
     }
+    return pick;
+  }
+
+  /**
+   * It takes an id, content, and user, and returns a promise of a pick
+   * @param {string} id - The id of the pick we want to update
+   * @param {string} content - string,
+   * @param {User} user - User - This is the user object that is currnetly login
+   * @returns Pick
+   */
+  async updatePickContent(
+    id: string,
+    content: string,
+    user: User,
+  ): Promise<Pick> {
+    const pick = await this.pickEntityRepository
+      .createQueryBuilder('pick')
+      .where('pick.id = :id', { id: id })
+      .andWhere('pick.user = :uid', { uid: user.id })
+      .getOne();
+
+    if (!pick) {
+      this.logger.error('Pick not found', '');
+      throw new NotFoundException('Pick not found');
+    }
+    pick.content = content;
+    await this.pickEntityRepository.save(pick);
+
     return pick;
   }
 }

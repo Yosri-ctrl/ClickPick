@@ -37,19 +37,20 @@ export class PickController {
     return this.pickService.getPickById(id);
   }
 
+  @Patch('/:id/content')
+  updatePickContent(
+    @Param('id') id: string,
+    @Body('content') content: string,
+    @GetUser() user: User,
+  ): Promise<Pick> {
+    this.logger.verbose(`Updating ${id}, content: ${content}`);
+    return this.pickService.updatePickContent(id, content, user);
+  }
+
   // @Get()
   // getAllPick(): Promise<Pick[]> {
   //   this.logger.verbose(`Fetching data for all Picks`);
   //   return this.pickRepo.getAllPick();
-  // }
-
-  // @Patch('/:id/content')
-  // updatePickContent(
-  //   @Param('id') id: string,
-  //   @Body() contentPickDto: CreatePickDto,
-  // ): Promise<Pick> {
-  //   this.logger.verbose(`Updating ${id}, content: ${contentPickDto.content}`);
-  //   return this.pickRepo.updatePickContent(id, contentPickDto);
   // }
 
   // @Delete('/:id')
