@@ -126,4 +126,19 @@ export class PickService {
 
     return picks;
   }
+
+  async getPickByGroupAndUser(id: string, user: User): Promise<Pick[]> {
+    const picks: Pick[] = await this.pickEntityRepository
+      .createQueryBuilder('pick')
+      .where('pick.user = :uid', { uid: user.id })
+      .andWhere('pick.group = :gid', { gid: id })
+      .getMany();
+
+    if (!picks) {
+      this.logger.error('Picks Not found');
+      throw new NotFoundException('Picks not found');
+    }
+
+    return picks;
+  }
 }

@@ -60,7 +60,16 @@ export class PickController {
 
   @Get('/getall')
   getAllPicks(): Promise<Pick[]> {
+    this.logger.verbose('Getting all picks');
     return this.pickService.getAllPicks();
+  }
+
+  @Get('/specific')
+  getBygroupAndUser(id: string, @GetUser() user: User): Promise<Pick[]> {
+    this.logger.verbose(
+      `Getting all picks for user: ${user.id} from group: ${id}`,
+    );
+    return this.pickService.getPickByGroupAndUser(id, user);
   }
 
   // @Delete('/:id')
