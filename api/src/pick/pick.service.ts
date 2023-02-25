@@ -109,4 +109,21 @@ export class PickService {
 
     return picks;
   }
+
+  /**
+   * It returns a promise of an array of Pick objects
+   * @returns An array of Pick objects
+   */
+  async getAllPicks(): Promise<Pick[]> {
+    const picks: Pick[] = await this.pickEntityRepository
+      .createQueryBuilder('pick')
+      .getMany();
+
+    if (!picks) {
+      this.logger.error('Picks Not found');
+      throw new NotFoundException('Picks not found');
+    }
+
+    return picks;
+  }
 }

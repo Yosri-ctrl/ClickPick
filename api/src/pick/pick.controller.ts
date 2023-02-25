@@ -58,6 +58,11 @@ export class PickController {
     return this.pickService.getAllPicksFromGroup(id);
   }
 
+  @Get('/getall')
+  getAllPicks(): Promise<Pick[]> {
+    return this.pickService.getAllPicks();
+  }
+
   // @Delete('/:id')
   // deletePick(@Param('id') id: string): Promise<void> {
   //   this.logger.verbose(`Deleting Pick with id: ${id}`);
