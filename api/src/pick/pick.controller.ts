@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Logger,
   Param,
@@ -72,9 +73,9 @@ export class PickController {
     return this.pickService.getPickByGroupAndUser(id, user);
   }
 
-  // @Delete('/:id')
-  // deletePick(@Param('id') id: string): Promise<void> {
-  //   this.logger.verbose(`Deleting Pick with id: ${id}`);
-  //   return this.pickRepo.deletPick(id);
-  // }
+  @Delete('/:id')
+  deletePick(@Param('id') id: string, @GetUser() user: User): Promise<void> {
+    this.logger.verbose(`Deleting Pick with id: ${id}`);
+    return this.pickService.deletePick(id, user);
+  }
 }

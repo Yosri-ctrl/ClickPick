@@ -88,6 +88,11 @@ export class PickService {
       .where('pick.user = :uid', { uid: user.id })
       .getMany();
 
+    if (!picks) {
+      this.logger.error('Picks not found');
+      throw new NotFoundException('Picks not found');
+    }
+
     return picks;
   }
 
@@ -140,5 +145,20 @@ export class PickService {
     }
 
     return picks;
+  }
+
+  async deletePick(id: string, user: User): Promise<void> {
+    const pick: Pick = await this.pickEntityRepository
+      .createQueryBuilder('pick')
+      .where('pick.id = :id', { id: id })
+      .andWhere('pick.user = :uid', { uid: user.id })
+      .getOne();
+
+    if (!pick) {
+      this.logger.error('Pick not found');
+      throw new NotFoundException('Pick not found');
+    }
+
+    await this.pickEntityRepository.delete(pick);
   }
 }
