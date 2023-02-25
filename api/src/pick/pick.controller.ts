@@ -47,11 +47,11 @@ export class PickController {
     return this.pickService.updatePickContent(id, content, user);
   }
 
-  // @Get()
-  // getAllPick(): Promise<Pick[]> {
-  //   this.logger.verbose(`Fetching data for all Picks`);
-  //   return this.pickRepo.getAllPick();
-  // }
+  @Get('/userallpicks')
+  getAllPick(@GetUser() user: User): Promise<Pick[]> {
+    this.logger.verbose(`Fetching data for all Picks from user: ${user.id}`);
+    return this.pickService.getAllPicksFromUser(user);
+  }
 
   // @Delete('/:id')
   // deletePick(@Param('id') id: string): Promise<void> {

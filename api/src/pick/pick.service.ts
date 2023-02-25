@@ -76,4 +76,18 @@ export class PickService {
 
     return pick;
   }
+
+  /**
+   * Get all the picks from a user.
+   * @param {User} user - User - this is the user object that we're passing in.
+   * @returns An array of Pick objects
+   */
+  async getAllPicksFromUser(user: User): Promise<Pick[]> {
+    const picks = await this.pickEntityRepository
+      .createQueryBuilder('pick')
+      .where('pick.user = :uid', { uid: user.id })
+      .getMany();
+
+    return picks;
+  }
 }
