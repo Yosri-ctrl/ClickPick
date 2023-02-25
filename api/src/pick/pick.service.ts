@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/auth/user.entity';
 import { GroupsService } from 'src/groups/groups.service';
@@ -32,6 +32,15 @@ export class PickService {
     });
 
     await this.pickEntityRepository.save(pick);
+    return pick;
+  }
+
+  async getPickById(id: string): Promise<Pick> {
+    const pick = await this.pickEntityRepository.findOneBy({ id });
+    if (!pick) {
+      this.logger.error(`Pick with id: ${id} not found`);
+      throw new NotFoundException();
+    }
     return pick;
   }
 }

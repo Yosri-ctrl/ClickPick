@@ -31,11 +31,11 @@ export class PickController {
     return this.pickService.createPick(createPick, user);
   }
 
-  // @Get('/:id')
-  // getOnPick(@Param('id') id: string, @GetUser() user: User): Promise<Pick> {
-  //   this.logger.verbose(`Fetching data for Pick with id: ${id}`);
-  //   return this.pickRepo.getOnePick(id);
-  // }
+  @Get('/:id')
+  getOnPick(@Param('id') id: string): Promise<Pick> {
+    this.logger.verbose(`Fetching data for Pick with id: ${id}`);
+    return this.pickService.getPickById(id);
+  }
 
   // @Get()
   // getAllPick(): Promise<Pick[]> {
