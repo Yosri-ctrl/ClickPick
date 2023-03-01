@@ -1,11 +1,14 @@
 import { Exclude } from 'class-transformer';
 import { User } from 'src/auth/user.entity';
+import { Comment } from 'src/comments/comment.entity';
 import { Group } from 'src/groups/group.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -21,8 +24,8 @@ export class Pick {
   // @Column({ default: 0 })
   // like: number;
 
-  // @Column({ nullable: true })
-  // comment: string;
+  @OneToMany(() => Comment, (comment) => comment.pick, { nullable: true, eager: false })
+  comment: Comment[];
 
   @ManyToOne(() => User, (user) => user.pick, { eager: false })
   @Exclude({ toPlainOnly: true })

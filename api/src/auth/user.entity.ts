@@ -1,4 +1,5 @@
 import { Exclude } from 'class-transformer';
+import { Comment } from 'src/comments/comment.entity';
 import { GroupsRole } from 'src/groups/groupsRole/groupsRole.entity';
 import { Pick } from 'src/pick/pick.entity';
 import {
@@ -40,6 +41,9 @@ export class User {
   @ManyToMany(() => User, (user) => user.followers)
   @JoinTable()
   following: User[];
+
+  @OneToMany(() => Comment, (comment) => comment.user)
+  comment: Comment[];
 
   // @Column({ nullable: true })
   // img: string;
