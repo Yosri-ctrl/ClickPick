@@ -1,6 +1,6 @@
 import { User } from 'src/auth/user.entity';
 import { Pick } from 'src/pick/pick.entity';
-import { Column, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Comment {
@@ -16,6 +16,6 @@ export class Comment {
   @Column()
   content: string;
 
-  @Column({default: 0})
+  @Column({ default: 0 })
   like: number;
 }
