@@ -155,19 +155,18 @@ export class AuthRepository {
     }
   }
 
-  async followUser(followUserDto: FollowUserDto): Promise<void> {
-    const { id1, id2 } = followUserDto;
-    if (id1 == id2) {
+  async followUser(user: User, id2: string): Promise<void> {
+    if (user.id == id2) {
       this.logger.error(`User can't be the same`);
       throw new ConflictException(`User can't be the same`);
     }
 
-    const user1 = await this.getUserWithRelation(id1, 'following');
+    const user1 = await this.getUserWithRelation(user.id, 'following');
     const user2 = await this.getOneUser(id2);
 
     if (user1[0].following.find((u) => u.id == id2)) {
-      this.logger.error(`User: ${id1} already following ${id2}`, '');
-      throw new ConflictException(`User: ${id1} already following ${id2}`);
+      this.logger.error(`User: ${user.id} already following ${id2}`, '');
+      throw new ConflictException(`User: ${user.id} already following ${id2}`);
     }
     user1[0].following.push(user2);
 

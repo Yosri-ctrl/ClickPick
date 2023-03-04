@@ -41,8 +41,8 @@ export class AuthService {
     return this.authRepository.deleteUser(user);
   }
 
-  followUser(followUserDto: FollowUserDto): Promise<void> {
-    return this.authRepository.followUser(followUserDto);
+  followUser(user, id): Promise<void> {
+    return this.authRepository.followUser(user, id);
   }
 
   unfollowUser(followUserDto: FollowUserDto): Promise<void> {

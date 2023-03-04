@@ -80,13 +80,11 @@ export class AuthController {
     return this.authService.deleteUser(user);
   }
 
-  @Patch('/follow')
+  @Patch(':id/follow')
   @UseGuards(AuthGuard())
-  followUser(@Body() followUserDto: FollowUserDto): Promise<void> {
-    this.logger.verbose(
-      `User: ${followUserDto.id1} following user: ${followUserDto.id2}`,
-    );
-    return this.authService.followUser(followUserDto);
+  followUser(@Param() id: string, @GetUser() user: User): Promise<void> {
+    this.logger.verbose(`User: ${user.id} following user: ${id}`);
+    return this.authService.followUser(user, id);
   }
 
   @Patch('/unfollow')
