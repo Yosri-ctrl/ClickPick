@@ -15,6 +15,7 @@ import { FollowUserDto } from './dto/follow-user.dto';
 import { SignInAuthDto } from './dto/sign-in-auth.dto';
 import { SignUpAuthDto } from './dto/sign-up-auth.dto';
 import { UpdateUserPassDto } from './dto/update-user-pass.dto';
+import { GetUser } from './get-user.decorator';
 import { User } from './user.entity';
 
 @Controller('auth')
@@ -55,9 +56,10 @@ export class AuthController {
   updateUserUsername(
     @Param('id') id: string,
     @Body('username') username: string,
+    @GetUser() user: User,
   ): Promise<User> {
     this.logger.verbose(`Updating username for user: ${id}`);
-    return this.authService.updateUserUsername(id, username);
+    return this.authService.updateUserUsername(user, username);
   }
 
   @Patch('/:id/password')
