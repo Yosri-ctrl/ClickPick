@@ -4,6 +4,7 @@ import { FollowUserDto } from './dto/follow-user.dto';
 import { SignInAuthDto } from './dto/sign-in-auth.dto';
 import { SignUpAuthDto } from './dto/sign-up-auth.dto';
 import { UpdateUserPassDto } from './dto/update-user-pass.dto';
+import { GetUser } from './get-user.decorator';
 import { User } from './user.entity';
 
 @Injectable()
@@ -26,8 +27,8 @@ export class AuthService {
     return this.authRepository.getAllUsers();
   }
 
-  updateUserUsername(id: string, username: string): Promise<User> {
-    return this.authRepository.updateUserUsername(id, username);
+  updateUserUsername(@GetUser() user: User, username: string): Promise<User> {
+    return this.authRepository.updateUserUsername(user, username);
   }
 
   updateUserPass(

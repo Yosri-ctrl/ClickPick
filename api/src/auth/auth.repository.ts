@@ -91,8 +91,8 @@ export class AuthRepository {
     return users;
   }
 
-  async updateUserUsername(id: string, username: string): Promise<User> {
-    const user = await this.getOneUser(id);
+  async updateUserUsername(user: User, username: string): Promise<User> {
+    // const user = await this.getOneUser(id);
     user.username = username;
     await this.authRepository.save(user);
     return user;
