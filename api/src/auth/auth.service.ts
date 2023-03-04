@@ -52,7 +52,7 @@ export class AuthService {
     return this.authRepository.getFollowers(user);
   }
 
-  getFollowing(id: string): Promise<User[]> {
-    return this.authRepository.getFollowing(id);
+  getFollowing(user: User): Promise<User[]> {
+    return this.authRepository.getFollowing(user);
   }
 }

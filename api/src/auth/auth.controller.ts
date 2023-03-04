@@ -102,9 +102,9 @@ export class AuthController {
 
   @Get('/:id/getfollowing')
   @UseGuards(AuthGuard())
-  getFollowing(@Param('id') id: string): Promise<User[]> {
-    this.logger.verbose(`Getting user: ${id} followers`);
-    return this.authService.getFollowing(id);
+  getFollowing(@GetUser() user: User): Promise<User[]> {
+    this.logger.verbose(`Getting user: ${user.id} followings`);
+    return this.authService.getFollowing(user);
   }
 
   // Post request to populate db with 4 user

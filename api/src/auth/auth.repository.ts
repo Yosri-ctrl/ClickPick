@@ -196,8 +196,8 @@ export class AuthRepository {
     return user1[0].followers;
   }
 
-  async getFollowing(id: string): Promise<User[]> {
-    const user1 = await this.getUserWithRelation(id, 'following');
+  async getFollowing(user: User): Promise<User[]> {
+    const user1 = await this.getUserWithRelation(user.id, 'following');
     return user1[0].following;
   }
 }
