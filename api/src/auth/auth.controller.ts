@@ -95,9 +95,9 @@ export class AuthController {
 
   @Get('/:id/getfollowers')
   @UseGuards(AuthGuard())
-  getFollowers(@Param('id') id: string): Promise<User[]> {
-    this.logger.verbose(`Getting user: ${id} followers`);
-    return this.authService.getFollowers(id);
+  getFollowers(@GetUser() user: User): Promise<User[]> {
+    this.logger.verbose(`Getting user: ${user.id} followers`);
+    return this.authService.getFollowers(user);
   }
 
   @Get('/:id/getfollowing')
