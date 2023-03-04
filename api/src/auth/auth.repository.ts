@@ -15,7 +15,6 @@ import { SignInAuthDto } from './dto/sign-in-auth.dto';
 import { JwtService } from '@nestjs/jwt';
 import { AuthJwtInterface } from './interface/auth.interface';
 import { UpdateUserPassDto } from './dto/update-user-pass.dto';
-import { FollowUserDto } from './dto/follow-user.dto';
 
 @Injectable()
 export class AuthRepository {
@@ -173,19 +172,18 @@ export class AuthRepository {
     await this.authRepository.save(user1);
   }
 
-  async unfollowUser(followUserDto: FollowUserDto): Promise<void> {
-    const { id1, id2 } = followUserDto;
-    if (id1 == id2) {
+  async unfollowUser(user: User, id: string): Promise<void> {
+    if (user.id == id) {
       this.logger.error(`User can't be the same`);
       throw new ConflictException(`User can't be the same`);
     }
 
-    const user1 = await this.getUserWithRelation(id1, 'following');
-    const user2 = await this.getOneUser(id2);
+    const user1 = await this.getUserWithRelation(user.id, 'following');
+    const user2 = await this.getOneUser(id);
 
-    if (!user1[0].following.find((u) => u.id == id2)) {
-      this.logger.error(`User: ${id1} is not following ${id2}`, '');
-      throw new ConflictException(`User: ${id1} is not following ${id2}`);
+    if (!user1[0].following.find((u) => u.id == id)) {
+      this.logger.error(`User: ${user.id} is not following ${id}`, '');
+      throw new ConflictException(`User: ${user.id} is not following ${id}`);
     }
 
     user1[0].following.splice(user1[0].following.indexOf(user2), 1);

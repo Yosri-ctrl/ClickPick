@@ -11,7 +11,6 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
-import { FollowUserDto } from './dto/follow-user.dto';
 import { SignInAuthDto } from './dto/sign-in-auth.dto';
 import { SignUpAuthDto } from './dto/sign-up-auth.dto';
 import { UpdateUserPassDto } from './dto/update-user-pass.dto';
@@ -82,18 +81,16 @@ export class AuthController {
 
   @Patch(':id/follow')
   @UseGuards(AuthGuard())
-  followUser(@Param() id: string, @GetUser() user: User): Promise<void> {
+  followUser(@Param('id') id: string, @GetUser() user: User): Promise<void> {
     this.logger.verbose(`User: ${user.id} following user: ${id}`);
     return this.authService.followUser(user, id);
   }
 
-  @Patch('/unfollow')
+  @Patch(':id/unfollow')
   @UseGuards(AuthGuard())
-  unfollowUser(@Body() followUserDto: FollowUserDto): Promise<void> {
-    this.logger.verbose(
-      `User: ${followUserDto.id1} unfollowing user: ${followUserDto.id2}`,
-    );
-    return this.authService.unfollowUser(followUserDto);
+  unfollowUser(@Param('id') id: string, @GetUser() user: User): Promise<void> {
+    this.logger.verbose(`User: ${user.id} unfollowing user: ${id}`);
+    return this.authService.unfollowUser(user, id);
   }
 
   @Get('/:id/getfollowers')

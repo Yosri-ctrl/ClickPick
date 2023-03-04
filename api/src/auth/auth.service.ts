@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { AuthRepository } from './auth.repository';
-import { FollowUserDto } from './dto/follow-user.dto';
 import { SignInAuthDto } from './dto/sign-in-auth.dto';
 import { SignUpAuthDto } from './dto/sign-up-auth.dto';
 import { UpdateUserPassDto } from './dto/update-user-pass.dto';
@@ -45,8 +44,8 @@ export class AuthService {
     return this.authRepository.followUser(user, id);
   }
 
-  unfollowUser(followUserDto: FollowUserDto): Promise<void> {
-    return this.authRepository.unfollowUser(followUserDto);
+  unfollowUser(user, id): Promise<void> {
+    return this.authRepository.unfollowUser(user, id);
   }
 
   getFollowers(id: string): Promise<User[]> {
