@@ -117,12 +117,12 @@ export class AuthRepository {
     return user;
   }
 
-  async deleteUser(id: string): Promise<void> {
-    const res = await this.authRepository.delete({ id });
+  async deleteUser(user: User): Promise<void> {
+    const res = await this.authRepository.delete(user.id);
 
     if (res.affected == 0) {
-      this.logger.error(`Failed delete user: "${id}"`);
-      throw new NotFoundException(`User with ${id} not found`);
+      this.logger.error(`Failed delete user: "${user.id}"`);
+      throw new NotFoundException(`User with ${user.id} not found`);
     }
   }
 

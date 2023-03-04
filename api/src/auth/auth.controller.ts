@@ -75,9 +75,9 @@ export class AuthController {
 
   @Delete('/:id')
   @UseGuards(AuthGuard())
-  deleteUser(@Param('id') id: string): Promise<void> {
+  deleteUser(@Param('id') id: string, @GetUser() user: User): Promise<void> {
     this.logger.verbose(`Deleting user: ${id}`);
-    return this.authService.deleteUser(id);
+    return this.authService.deleteUser(user);
   }
 
   @Patch('/follow')
