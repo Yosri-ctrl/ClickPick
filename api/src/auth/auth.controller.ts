@@ -67,9 +67,10 @@ export class AuthController {
   updateUserPass(
     @Param('id') id: string,
     @Body() updateUserPassDto: UpdateUserPassDto,
+    @GetUser() user: User,
   ): Promise<User> {
     this.logger.verbose(`Updating password for user: ${id}`);
-    return this.authService.updateUserPass(id, updateUserPassDto);
+    return this.authService.updateUserPass(user, updateUserPassDto);
   }
 
   @Delete('/:id')

@@ -31,10 +31,10 @@ export class AuthService {
   }
 
   updateUserPass(
-    id: string,
+    user: User,
     updateUserPassDto: UpdateUserPassDto,
   ): Promise<User> {
-    return this.authRepository.updaetUserPass(id, updateUserPassDto);
+    return this.authRepository.updaetUserPass(user, updateUserPassDto);
   }
 
   deleteUser(id: string): Promise<void> {
