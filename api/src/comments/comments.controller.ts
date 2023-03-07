@@ -1,15 +1,24 @@
-import { Body, Controller, Logger, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Logger,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { User } from 'src/auth/user.entity';
 import { Comment } from './comment.entity';
 import { CommentsService } from './comments.service';
 
 @Controller('comments')
+@UseGuards(AuthGuard())
 export class CommentsController {
   constructor(private commentService: CommentsService) {}
   private logger = new Logger('Comments Service');
 
-  @Post()
+  @Post(':id/')
   createComment(
     @GetUser() user: User,
     @Param('id') id: string,

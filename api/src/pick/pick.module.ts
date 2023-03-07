@@ -10,5 +10,6 @@ import { GroupsModule } from 'src/groups/groups.module';
   providers: [PickService],
   controllers: [PickController],
   imports: [TypeOrmModule.forFeature([Pick]), AuthModule, GroupsModule],
+  exports: [PickService],
 })
 export class PickModule {}
