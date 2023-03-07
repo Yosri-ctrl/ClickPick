@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Logger,
   Param,
   Post,
@@ -25,5 +26,10 @@ export class CommentsController {
     @Body('content') content: string,
   ): Promise<Comment> {
     return this.commentService.createComment(user, id, content);
+  }
+
+  @Get(':id/')
+  getCommentByPick(@Param('id') id: string): Promise<Comment[]> {
+    return this.commentService.getCommetsByPick(id);
   }
 }
