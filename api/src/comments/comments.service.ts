@@ -55,4 +55,18 @@ export class CommentsService {
 
     return comments;
   }
+
+  /**
+   * Get all comments for a given user.
+   * @param {User} user - User - the user object that we're passing in
+   * @returns An array of comments
+   */
+  async getCommentsByUser(user: User): Promise<Comment[]> {
+    const comments: Comment[] = await this.commentRepo
+      .createQueryBuilder('comment')
+      .where('userId = :uid', { uid: user.id })
+      .getMany();
+
+    return comments;
+  }
 }

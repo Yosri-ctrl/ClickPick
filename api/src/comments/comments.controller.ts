@@ -32,4 +32,9 @@ export class CommentsController {
   getCommentByPick(@Param('id') id: string): Promise<Comment[]> {
     return this.commentService.getCommetsByPick(id);
   }
+
+  @Get()
+  getCommentsByUser(@GetUser() user: User): Promise<Comment[]> {
+    return this.commentService.getCommentsByUser(user);
+  }
 }
