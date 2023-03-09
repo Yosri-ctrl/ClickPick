@@ -1,5 +1,6 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { NotFoundError } from 'rxjs';
 import { User } from 'src/auth/user.entity';
 import { Pick } from 'src/pick/pick.entity';
 import { PickService } from 'src/pick/pick.service';
@@ -68,5 +69,20 @@ export class CommentsService {
       .getMany();
 
     return comments;
+  }
+
+  /**
+   * It takes an id as a parameter, finds a comment with that id, and returns it
+   * @param {string} id - string - The id of the comment we want to retrieve.
+   * @returns A comment
+   */
+  async getCommentById(id: string): Promise<Comment> {
+    const comment: Comment = await this.commentRepo.findOneBy({ id });
+    if (!comment) {
+      this.logger.error('Comment not found');
+      throw new NotFoundException('Comment not found');
+    }
+
+    return comment;
   }
 }

@@ -28,13 +28,18 @@ export class CommentsController {
     return this.commentService.createComment(user, id, content);
   }
 
-  @Get(':id/')
+  @Get(':id/pick')
   getCommentByPick(@Param('id') id: string): Promise<Comment[]> {
     return this.commentService.getCommetsByPick(id);
   }
 
-  @Get()
+  @Get('/user')
   getCommentsByUser(@GetUser() user: User): Promise<Comment[]> {
     return this.commentService.getCommentsByUser(user);
+  }
+
+  @Get(':id')
+  getCommentById(@Param('id') id: string): Promise<Comment> {
+    return this.commentService.getCommentById(id);
   }
 }
