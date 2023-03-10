@@ -5,6 +5,7 @@ import {
   Logger,
   Param,
   Post,
+  Put,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -41,5 +42,13 @@ export class CommentsController {
   @Get(':id')
   getCommentById(@Param('id') id: string): Promise<Comment> {
     return this.commentService.getCommentById(id);
+  }
+
+  @Put(':id')
+  updateCommentContent(
+    @Param('id') id: string,
+    @Body('content') content: string,
+  ): Promise<Comment> {
+    return this.commentService.updateCommentContent(id, content);
   }
 }

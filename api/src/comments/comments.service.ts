@@ -1,6 +1,5 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { NotFoundError } from 'rxjs';
 import { User } from 'src/auth/user.entity';
 import { Pick } from 'src/pick/pick.entity';
 import { PickService } from 'src/pick/pick.service';
@@ -83,6 +82,21 @@ export class CommentsService {
       throw new NotFoundException('Comment not found');
     }
 
+    return comment;
+  }
+
+  /**
+   * Update the content of a comment by its id.
+   * @param {string} id - string - The id of the comment to update
+   * @param {string} content - string - the new content of the comment
+   * @returns A promise of a comment
+   */
+  async updateCommentContent(id: string, content: string): Promise<Comment> {
+    const comment: Comment = await this.getCommentById(id);
+
+    comment.content = content;
+
+    await this.commentRepo.save(comment);
     return comment;
   }
 }
