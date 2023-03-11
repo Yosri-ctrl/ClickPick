@@ -99,4 +99,13 @@ export class CommentsService {
     await this.commentRepo.save(comment);
     return comment;
   }
+
+  /**
+   * Delete a comment by its id.
+   * @param {string} id - string - The id of the comment to be deleted.
+   */
+  async deleteComment(id: string): Promise<void> {
+    const comment: Comment = await this.getCommentById(id);
+    await this.commentRepo.delete(comment);
+  }
 }

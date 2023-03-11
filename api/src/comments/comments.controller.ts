@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Logger,
   Param,
@@ -50,5 +51,10 @@ export class CommentsController {
     @Body('content') content: string,
   ): Promise<Comment> {
     return this.commentService.updateCommentContent(id, content);
+  }
+
+  @Delete(':id')
+  deleteComment(@Param('id') id: string): Promise<void> {
+    return this.commentService.deleteComment(id);
   }
 }
